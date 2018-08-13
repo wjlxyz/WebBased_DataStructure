@@ -1,0 +1,107 @@
+body{
+    background-color: #E0FFFF;
+    font-family: Microsoft YaHei, '宋体' , Tahoma, Helvetica, Arial, "\5b8b\4f53", sans-serif;
+}
+h4{
+    font-family: "宋体";
+    font-size: 18px;
+    color: #ce8483;
+}
+comment{
+    font-family: "宋体";
+    font-size: 16px;
+    color: #ce8483;
+}
+label.exeHint{
+    font-size: 20px;
+    font-weight: bold;
+}
+.container-fluid{
+    margin-top: 1%;
+}
+.myNav{
+    width: 12%;
+    height: 600px;
+}
+.nav1{
+    width: 80px;
+}
+.nav1 button, .btn-nav:focus, .btn-nav:hover, .btn-nav:active{
+    background-color: #333399;
+    color: #fff;
+}
+.nav2{
+    width: 80px;
+    margin-left: 50px;
+}
+.nav2 button, .btn-act:focus, .btn-act:hover, .btn-act:active{
+    background-color: #333399;
+    color: #fff;
+}
+.btn-nav{
+    padding: 16px 10px;
+    font-size: 22px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    line-height: 100%;
+    border-radius: 10px;
+}
+.btn-act{
+    padding: 8px 8px;
+    font-size: 18px;
+    background-color: #3333FF;
+    font-weight: bold;
+    border-radius: 40px;
+}
+.content{
+    margin-left: -30px;
+    width: 85%;
+    font-family: '宋体';
+}
+.actionBar{
+    font-weight: bolder;
+    font-family: 宋体;
+}
+.tableShow{
+    height: 220px;
+    display: none;
+    font-family: "宋体";
+}
+table{
+    width:100%;
+    font-size: 16px;
+    border: 1px #888 solid;
+    background-color: #F0FFFF;
+    font-family: "宋体";
+}
+tr, td{
+    border: 1px black solid;
+    font-family: "Times New Roman";
+    font-weight: bold;
+}
+thead{
+    background-color: #F6F7F9;
+}
+.tab-pane{
+    display: none;
+}
+.drawing{
+    margin-top: 4px;
+    height: 520px;
+}
+
+.codeShow{
+    height: 320px;
+    font-family: "Comic Sans MS";
+    font-weight: bold;
+    line-height: 100%;
+    font-size: 18px;
+    overflow-y: auto;
+}
+.execBar{
+    display: none;
+}
+.highlight{
+    background-color: yellow;
+    color: red;
+}
