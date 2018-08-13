@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LinkList</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -324px;
+            display: block;
+        }
+        #insertlinkList, #deletelinkList{
+            display: none;
+        }
+        .codeShow{
+            line-height: 110%;
+        }
+        .tableShow{
+            margin-top: 20px;
+        }
+        .drawing{
+            height: 220px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        input#insertArray, input#deleteArray{
+            width: 200px;
+        }
+        input#insertValue, input#deleteValue,input#pNode{
+            width: 40px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="window.location.href='linearlist.html'" style="background-color: #C0C0C0">顺<br>序<br>表</button>
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">链<br>表</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'" style="background-color: #C0C0C0">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('insert', 'linkList', this)">插<br>入<br>元<br>素</button>
+                <button type="button" class="btn btn-nav" onclick="jump('delete', 'linkList', this)">删<br>除<br>元<br>素</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="insert">
+                        <label class="exeHint">请输入链表中元素</label>
+                        <input id="insertArray" placeholder="最多7个元素，英文逗号隔开" type="text">
+                        <label class="exeHint">p节点</label>
+                        <input id="pNode" type="number">
+                        <label class="exeHint">请输入待插入的数据</label>
+                        <input id="insertValue" type="text">
+                        <button class="btn btn-act btn-primary" onclick="insertData()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleInsert()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="delete">
+                        <label class="exeHint">请输入链表中元素</label>
+                        <input id="deleteArray" placeholder="最多7个元素，英文逗号隔开" type="text">
+                        <label class="exeHint">请输入要删除的值</label>
+                        <input id="deleteValue" type="number">
+                        <button class="btn btn-primary btn-act" onclick="deleteData()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleDelete()">单步执行</button>
+                    </span>
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="drawing">
+                        <div id="draw"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tableShow col-md-6">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>变量名</th>
+                            <th>变量值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-6 showing">
+                    <div class="codeShow">
+                        <div id="insertlinkList">
+                            <h4>/*插入数据*/</h4>
+                            <p class="p1">int insertPost_link(LinkList llist,PNode p,DataType x){</p>
+                            <comment>/*在带头结点的单链表llist中，p所指结点后面插入元素x*/</comment>
+                            <p class="p2">&nbsp;&nbsp;PNode q=(PNode)malloc(sizeof(struct Node));<comment>/*申请新节点*/</comment></p>
+                            <p class="p3">&nbsp;&nbsp;if(q=NULL){</p>
+                            <p class="p4">&nbsp;&nbsp;&nbsp;&nbsp;printf("Out of space!!!\n");</p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="p6">&nbsp;&nbsp;}</p>
+                            <p class="p7">&nbsp;&nbsp;else {</p>
+                            <p class="p8">&nbsp;&nbsp;&nbsp;&nbsp;q->info=x;</p>
+                            <p class="p9">&nbsp;&nbsp;&nbsp;&nbsp;q->link=p->link;</p>
+                            <p class="p10">&nbsp;&nbsp;&nbsp;&nbsp;p->link=q;</p>
+                            <p class="p11">&nbsp;&nbsp;&nbsp;&nbsp;return 1;</p>
+                            <p class="p12">&nbsp;&nbsp;}</p>
+                            <p class="p13">}
+                        </div>
+                        <div id="deletelinkList">
+                            <h4>/*删除数据*/</h4>
+                            <p class="q1">int deleteV_link(LinkList llist,DataType x){</p>
+                            <comment>/*在带有头结点的单链表llist中删除第一个值为x的结点*/</comment>
+                            <p class="q2">&nbsp;&nbsp;PNode p,q;</p>
+                            <p class="q3">&nbsp;&nbsp;p=llist;</p>
+                            <p class="q4">&nbsp;&nbsp;if(p==NULL)</p>
+                            <p class="q5">&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="q6">&nbsp;&nbsp;while(p->link!=NULL&&p->link->info!=x)</p>
+                            <p class="q7">&nbsp;&nbsp;&nbsp;&nbsp;p=p->link;<comment>/*找值为x的结点的前驱结点的存储位置*/</comment></p>
+                            <p class="q8">&nbsp;&nbsp;if(p->link==NULL){<comment>/*没找到值为x的结点*/</comment></p>
+                            <p class="q9">&nbsp;&nbsp;&nbsp;&nbsp;printf("Not exist! \n ");</p>
+                            <p class="q10">&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="q11">&nbsp;&nbsp;}</p>
+                            <p class="q12">&nbsp;&nbsp;else{</p>
+                            <p class="q13">&nbsp;&nbsp;&nbsp;&nbsp;q=p->link;</p>
+                            <p class="q14">&nbsp;&nbsp;&nbsp;&nbsp;p->link=q->link;<comment>/*找到值为x的结点*/</comment></p>
+                            <p class="q15">&nbsp;&nbsp;&nbsp;&nbsp;free(q);<comment>/*删除该结点*/</comment></p>
+                            <p class="q16">&nbsp;&nbsp;&nbsp;&nbsp;return 1;</p>
+                            <p class="q17">&nbsp;&nbsp;}</p>
+                            <p class="q18">}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/svg.draggable.js"></script>
+<script src="../js/svg.connectable.js"></script>
+<script type="text/javascript">
+    var autoI = false, autoD = false;
+    var exeI = false, exeD = false;
+
+    var draw = SVG("draw").size(1200, 300);
+    var startX = 60;
+    var startY = 10;
+    var rectWidth = 80;
+    var rectHeight = 60;
+    var rectWidth2 = 30;
+    var rectArray = new Array();
+    var rectArray2 = new Array();
+    var textArray = new Array();
+    var arrowArray = new Array();
+
+
+    function jump(come, type, ob){
+        if(autoI || autoD || exeI || exeD){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+    var insertArray;
+    var deleteArray;
+    var insertValue, deleteValue;
+    var pNode;
+    var deleteArrow;
+    var deleteText;
+    var insertRect, insertRect2;
+    var deleteRect, deleteRect2;
+
+    var times = 0;
+    var timePara = 1;
+    function singleInsert(){
+        if(autoI){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("p" + timePara);
+            insertArray = $("#insertArray").val().split(',');
+            pNode = $("#pNode").val();
+            pNode = parseInt(pNode);
+            insertValue = $("#insertValue").val();
+            if(insertArray.length <= 0 || $("#insertArray").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入链表中元素!\n");
+                return;
+            }
+            if(insertArray.length > 7){
+                times = 0;
+                timePara = 1;
+                alert("请输入长度不超过7的链表!\n");
+                return;
+            }
+            if($("#pNode").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入p节点!\n");
+                return;
+            }
+            if(pNode > insertArray.length - 1){
+                times = 0;
+                timePara = 1;
+                alert("请输入正确的p节点!\n");
+                return;
+            }
+            if(insertValue == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入待插入的元素!\n");
+                return;
+            }
+            draw.clear();
+            exeI = true;
+            for(var i = 0; i < insertArray.length + 1; i++){
+                if(i == 0){
+                    textArray[i] = drawText("head", 24, startX + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                }else{
+                    textArray[i] = drawText(insertArray[i - 1], 24, startX + i * rectWidth + 2 * i * rectWidth2 + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                }
+                rectArray[i] = drawRect(rectWidth, rectHeight, startX + i * rectWidth + 2 * i * rectWidth2, startY);
+                rectArray2[i] = drawRect(rectWidth2, rectHeight, startX + (i + 1) * rectWidth + 2 * i * rectWidth2, startY);
+                arrowArray[i] = draw.polygon("155,38 155,42 190,42 190,48 200,40 190,32 190,38").fill({color: "red"}).stroke("none");
+            }
+            for(var i = 0; i < insertArray.length; i++){
+                arrowArray[i].animate(500, ">", 500).dx(i * (rectWidth + 2 * rectWidth2));
+            }
+            timePara++;
+        }else if(times == 2){
+            high("p" + timePara);
+            insertRect = drawRect(rectWidth, rectHeight, startX, startY + 2 * rectHeight);
+            insertRect2 = drawRect(rectWidth2, rectHeight, startX + rectWidth, startY + 2 * rectHeight);
+            insertRect.animate(500, ">", 500).dx((pNode + 2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+            insertRect2.animate(500, ">", 500).dx((pNode + 2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+            timePara++;
+        }else if(times == 3){
+            high("p" + timePara);
+            times = 6;
+            timePara = 7;
+        } else if(times == 7){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 8){
+            high("p" + timePara);
+            drawText(insertValue, 24, startX + (pNode + 2.5) * rectWidth + (pNode + 1) * 2 * rectWidth2,startY + 2.3 * rectHeight)
+            timePara++;
+        }else if(times == 9){
+            high("p" + timePara);
+            if(pNode < insertArray.length - 1){
+                var upArrow = draw.polygon("60,65 64,75 62,75 62,130 58,130 58,75 56,75").fill({color: "red"}).stroke("none");
+                upArrow.animate(0, ">", 0).dx((pNode + 3.2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+            }
+            timePara++;
+        }else if(times == 10){
+            high("p" + timePara);
+            arrowArray[pNode + 1].animate(0, ">", 0).dx(10000);
+            var downArrow = draw.polygon("60,130 64,120 62,120 62,65 58,65 58,120 56,120").fill({color: "red"}).stroke("none");
+            downArrow.animate(0, ">", 0).dx((pNode + 2.2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+            insertArray.splice(pNode + 1, 0, insertValue);
+            timePara++;
+        }else if(times == 11){
+            high("p" + timePara);
+            times = 0;
+            timePara = 1;
+            exeI = false;
+            rectArray.length = 0;
+            rectArray2.length = 0;
+            textArray.length = 0;
+            arrowArray.length;
+            alert("链表元素插入完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("p", pNode,"在p节点后插入数据");
+        displayTable("llist", insertArray.join('->'), "链表");
+        displayTable("q", insertValue, "新节点");
+    }
+    function insertData(){
+        if(autoI || exeI){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("p" + timePara);
+                insertArray = $("#insertArray").val().split(',');
+                pNode = $("#pNode").val();
+                pNode = parseInt(pNode);
+                insertValue = $("#insertValue").val();
+                if(insertArray.length <= 0 || $("#insertArray").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入链表中元素!\n");
+                    return;
+                }
+                if(insertArray.length > 7){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入长度不超过7的链表!\n");
+                    return;
+                }
+                if($("#pNode").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入p节点!\n");
+                    return;
+                }
+                if(pNode > insertArray.length - 1){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入正确的p节点!\n");
+                    return;
+                }
+                if(insertValue == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入待插入的元素!\n");
+                    return;
+                }
+                draw.clear();
+                autoI = true;
+                for(var i = 0; i < insertArray.length + 1; i++){
+                    if(i == 0){
+                        textArray[i] = drawText("head", 24, startX + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                    }else{
+                        textArray[i] = drawText(insertArray[i - 1], 24, startX + i * rectWidth + 2 * i * rectWidth2 + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                    }
+                    rectArray[i] = drawRect(rectWidth, rectHeight, startX + i * rectWidth + 2 * i * rectWidth2, startY);
+                    rectArray2[i] = drawRect(rectWidth2, rectHeight, startX + (i + 1) * rectWidth + 2 * i * rectWidth2, startY);
+                    arrowArray[i] = draw.polygon("155,38 155,42 190,42 190,48 200,40 190,32 190,38").fill({color: "red"}).stroke("none");
+                }
+                for(var i = 0; i < insertArray.length; i++){
+                    arrowArray[i].animate(500, ">", 500).dx(i * (rectWidth + 2 * rectWidth2));
+                }
+                timePara++;
+            }else if(times == 2){
+                high("p" + timePara);
+                insertRect = drawRect(rectWidth, rectHeight, startX, startY + 2 * rectHeight);
+                insertRect2 = drawRect(rectWidth2, rectHeight, startX + rectWidth, startY + 2 * rectHeight);
+                insertRect.animate(500, ">", 500).dx((pNode + 2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+                insertRect2.animate(500, ">", 500).dx((pNode + 2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+                timePara++;
+            }else if(times == 3){
+                high("p" + timePara);
+                times = 6;
+                timePara = 7;
+            } else if(times == 7){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 8){
+                high("p" + timePara);
+                drawText(insertValue, 24, startX + (pNode + 2.5) * rectWidth + (pNode + 1) * 2 * rectWidth2,startY + 2.3 * rectHeight)
+                timePara++;
+            }else if(times == 9){
+                high("p" + timePara);
+                if(pNode < insertArray.length - 1){
+                    var upArrow = draw.polygon("60,65 64,75 62,75 62,130 58,130 58,75 56,75").fill({color: "red"}).stroke("none");
+                    upArrow.animate(0, ">", 0).dx((pNode + 3.2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+                }
+                timePara++;
+            }else if(times == 10){
+                high("p" + timePara);
+                arrowArray[pNode + 1].animate(0, ">", 0).dx(10000);
+                var downArrow = draw.polygon("60,130 64,120 62,120 62,65 58,65 58,120 56,120").fill({color: "red"}).stroke("none");
+                downArrow.animate(0, ">", 0).dx((pNode + 2.2) * rectWidth + (pNode + 1) * 2 * rectWidth2);
+                insertArray.splice(pNode + 1, 0, insertValue);
+                timePara++;
+            }else if(times == 11){
+                high("p" + timePara);
+                times = 0;
+                timePara = 1;
+                autoI = false;
+                rectArray.length = 0;
+                rectArray2.length = 0;
+                textArray.length = 0;
+                arrowArray.length = 0;
+                alert("链表元素插入完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("p", pNode,"在p节点后插入数据");
+            displayTable("llist", insertArray.join('->'), "链表");
+            displayTable("q", insertValue, "新节点");
+            if(times < 11){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    var pOffset = 0;
+    function singleDelete(){
+        if(autoD){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("q" + timePara);
+            deleteArray = $("#deleteArray").val().split(',');
+            deleteValue = $("#deleteValue").val();
+            if(deleteArray.length <= 0 || $("#deleteArray").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入链表中元素!\n");
+                return;
+            }
+            if(deleteArray.length > 7){
+                times = 0;
+                timePara = 1;
+                alert("请输入长度不超过7的链表!\n");
+                return;
+            }
+            if(deleteValue == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入待删除的元素!\n");
+                return;
+            }
+            draw.clear();
+            exeD = true;
+            for(var i = 0; i < deleteArray.length + 1; i++){
+                if(i == 0){
+                    textArray[i] = drawText("head", 24, startX + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                }else{
+                    textArray[i] = drawText(deleteArray[i - 1], 24, startX + i * rectWidth + 2 * i * rectWidth2 + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                }
+                rectArray[i] = drawRect(rectWidth, rectHeight, startX + i * rectWidth + 2 * i * rectWidth2, startY);
+                rectArray2[i] = drawRect(rectWidth2, rectHeight, startX + (i + 1) * rectWidth + 2 * i * rectWidth2, startY);
+                if(i < deleteArray.length){
+                    arrowArray[i] = draw.polygon("155,38 155,42 190,42 190,48 200,40 190,32 190,38").fill({color: "red"}).stroke("none");
+                }
+            }
+            for(var i = 0; i < deleteArray.length; i++){
+                arrowArray[i].animate(500, ">", 500).dx(i * (rectWidth + 2 * rectWidth2));
+            }
+            timePara++;
+        }else if(times == 2){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 3){
+            high("q" + timePara);
+            pOffset = 0;
+            deleteArrow = draw.polygon("100,85 104,95 102,95 102,130 98,130 98,95 96,95").fill({color: "red"}).stroke("none");
+            //deleteArrow.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+            deleteText = drawText("p", 24, 100, 130);
+            //deleteText.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+            timePara++;
+        }else if(times == 4){
+            high("q" + timePara);
+            times = 5
+            timePara = 6;
+        }else if(times == 6){
+            high("q" + timePara);
+            if(deleteArray[pOffset] != null && deleteArray[pOffset] != deleteValue){
+                timePara++;
+            }else{
+                times = 7;
+                timePara = 8;
+            }
+        }else if(times == 7){
+            high("q" + timePara);
+            pOffset++;
+            deleteArrow.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+            deleteText.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+            times = 5;
+            timePara = 6;
+        }else if(times == 8){
+            high("q" + timePara);
+            if(deleteArray[pOffset] == null){
+                timePara++;
+            }else{
+                times =11;
+                timePara = 12;
+            }
+        }else if(times == 9){
+            high("q" + timePara);
+            times = 0;
+            timePara = 1;
+            exeD = false;
+            pOffset = 0;
+            rectArray.length = 0;
+            rectArray2.length = 0;
+            textArray.length = 0;
+            arrowArray.length = 0;
+            alert("Not exist!\n");
+            return;
+        }else if(times == 12){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 13){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 14){
+            high("q" + timePara);
+            var pArrow = draw.polygon("58,65 58,130 287,130 287,75 289,75 285,65 281,75 283,75 283,126 62,126 62,65").fill({color: "red"}).stroke("none");;
+            pArrow.animate(500, ">", 500).dx((pOffset + 1) * (rectWidth + 2 * rectWidth2) - 2 * rectWidth2);
+            if(pOffset < deleteArray.length - 1){
+                arrowArray[pOffset + 1].animate(500, ">", 0).dy(10000);
+            }
+            arrowArray[pOffset].animate(500, ">", 0).dy(10000);
+            deleteArray.splice(pOffset, 1);
+            timePara++;
+        }else if(times == 15){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 16){
+            high("q" + timePara);
+            times = 0;
+            timePara = 1;
+            exeD = false;
+            rectArray.length = 0;
+            rectArray2.length = 0;
+            textArray.length = 0;
+            arrowArray.length = 0;
+            alert("链表元素删除完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("p", "", "链表指针");
+        displayTable("q", "", "链表指针");
+        displayTable("llist", deleteArray.join('->'), "链表");
+    }
+    function deleteData(){
+        if(autoD || exeD){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("q" + timePara);
+                deleteArray = $("#deleteArray").val().split(',');
+                deleteValue = $("#deleteValue").val();
+                if(deleteArray.length <= 0 || $("#deleteArray").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入链表中元素!\n");
+                    return;
+                }
+                if(deleteArray.length > 7){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入长度不超过7的链表!\n");
+                    return;
+                }
+                if(deleteValue == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入待删除的元素!\n");
+                    return;
+                }
+                draw.clear();
+                autoD = true;
+                for(var i = 0; i < deleteArray.length + 1; i++){
+                    if(i == 0){
+                        textArray[i] = drawText("head", 24, startX + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                    }else{
+                        textArray[i] = drawText(deleteArray[i - 1], 24, startX + i * rectWidth + 2 * i * rectWidth2 + 0.5 * rectWidth, startY + 0.3 * rectHeight);
+                    }
+                    rectArray[i] = drawRect(rectWidth, rectHeight, startX + i * rectWidth + 2 * i * rectWidth2, startY);
+                    rectArray2[i] = drawRect(rectWidth2, rectHeight, startX + (i + 1) * rectWidth + 2 * i * rectWidth2, startY);
+                    if(i < deleteArray.length){
+                        arrowArray[i] = draw.polygon("155,38 155,42 190,42 190,48 200,40 190,32 190,38").fill({color: "red"}).stroke("none");
+                    }
+                }
+                for(var i = 0; i < deleteArray.length; i++){
+                    arrowArray[i].animate(500, ">", 500).dx(i * (rectWidth + 2 * rectWidth2));
+                }
+                timePara++;
+            }else if(times == 2){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 3){
+                high("q" + timePara);
+                pOffset = 0;
+                deleteArrow = draw.polygon("100,85 104,95 102,95 102,130 98,130 98,95 96,95").fill({color: "red"}).stroke("none");
+                //deleteArrow.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+                deleteText = drawText("p", 24, 100, 130);
+                //deleteText.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+                timePara++;
+            }else if(times == 4){
+                high("q" + timePara);
+                times = 5
+                timePara = 6;
+            }else if(times == 6){
+                high("q" + timePara);
+                if(deleteArray[pOffset] != null && deleteArray[pOffset] != deleteValue){
+                    timePara++;
+                }else{
+                    times = 7;
+                    timePara = 8;
+                }
+            }else if(times == 7){
+                high("q" + timePara);
+                pOffset++;
+                deleteArrow.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+                deleteText.animate(500, ">", 500).dx(rectWidth + 2 * rectWidth2);
+                times = 5;
+                timePara = 6;
+            }else if(times == 8){
+                high("q" + timePara);
+                if(deleteArray[pOffset] == null){
+                    timePara++;
+                }else{
+                    times =11;
+                    timePara = 12;
+                }
+            }else if(times == 9){
+                high("q" + timePara);
+                times = 0;
+                timePara = 1;
+                autoD = false;
+                pOffset = 0;
+                rectArray.length = 0;
+                rectArray2.length = 0;
+                textArray.length = 0;
+                arrowArray.length = 0;
+                alert("Not exist!\n");
+                return;
+            }else if(times == 12){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 13){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 14){
+                high("q" + timePara);
+                var pArrow = draw.polygon("58,65 58,130 287,130 287,75 289,75 285,65 281,75 283,75 283,126 62,126 62,65").fill({color: "red"}).stroke("none");;
+                pArrow.animate(500, ">", 500).dx((pOffset + 1) * (rectWidth + 2 * rectWidth2) - 2 * rectWidth2);
+                if(pOffset < deleteArray.length - 1){
+                    arrowArray[pOffset + 1].animate(500, ">", 0).dy(10000);
+                }
+                arrowArray[pOffset].animate(500, ">", 0).dy(10000);
+                deleteArray.splice(pOffset, 1);
+                timePara++;
+            }else if(times == 15){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 16){
+                high("q" + timePara);
+                times = 0;
+                timePara = 1;
+                autoD = false;
+                rectArray.length = 0;
+                rectArray2.length = 0;
+                textArray.length = 0;
+                arrowArray.length = 0;
+                alert("链表元素删除完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("p", "", "链表指针");
+            displayTable("q", "", "链表指针");
+            displayTable("llist", deleteArray.join('->'), "链表");
+            if(times < 16){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+</script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+</body>
+</html>

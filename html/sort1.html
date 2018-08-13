@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sort</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        #insertSort, #chooseSort, #heapSort{
+            display: none;
+        }
+        .nav2{
+            margin-top: -216px;
+            display: none;
+        }
+        .drawing{
+            height: 220px;
+            width: 100%;
+        }
+        input{
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">排<br>序</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('insert', 'Sort', this)">直<br>接<br>插<br>入<br>排<br>序</button>
+                <button type="button" class="btn btn-nav" onclick="jump('choose', 'Sort', this)">选<br>择<br>排<br>序</button>
+                <button type="button" class="btn btn-nav" onclick="jump('heap', 'Sort', this)">冒<br>泡<br>排<br>序</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="insert">
+                        <label class="exeHint">请输入待排序的数组</label>
+                        <input id="insertArray" type="text" placeholder="最大长度为10，英文逗号隔开">
+                        <button class="btn btn-primary btn-act" onclick="insertSort()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleInsert()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="choose">
+                        <label class="exeHint">请输入待排序的数组</label>
+                        <input id="selectArray" type="text" placeholder="最大长度为10，英文逗号隔开">
+                        <button class="btn btn-primary btn-act" onclick="selectSort()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleSelect()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="heap">
+                        <label class="exeHint">请输入待排序的数组</label>
+                        <input id="bubbleArray" type="text" placeholder="最大长度为10，英文逗号隔开">
+                        <button class="btn btn-primary btn-act" onclick="bubbleSort()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleBubble()">单步执行</button>
+                    </span>
+                </span>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="drawing">
+                        <div id="draw"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tableShow col-md-5">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>变量名</th>
+                            <th>变量值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-7 showing">
+                    <div class="codeShow">
+                        <div id="insertSort">
+                            <h4>/*直接插入排序*/</h4>
+                            <p class="p1">void insertSort(SortObject* pvector){<comment>/*按递增序进行直接插入排序*/</comment></p>
+                            <p class="p2">&nbsp;&nbsp;&nbsp;&nbsp;int i,j;</p>
+                            <p class="p3">&nbsp;&nbsp;&nbsp;&nbsp;RecordNode temp;</p>
+                            <p class="p4">&nbsp;&nbsp;&nbsp;&nbsp;RecordNode* data=pvector->record;<comment>/*引入data使代码更简洁*/</comment></p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;for(i=1;i < pvector->n;++i){   <comment>/*依次插入R1,R2,…,Rn-1*/</comment></p>
+                            <p class="p6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp=data[i];</p>
+                            <comment>&nbsp;&nbsp;&nbsp;&nbsp;/*由后向前找插入位置，排序码大于ki的记录后移*/</comment>
+                            <p class="p7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(j=i-1;temp.key < data[j].key&&j>=0;j--)</p>
+                            <p class="p8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j+1]=data[j];</p>
+                            <p class="p9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(j!=i-1)</p>
+                            <p class="p10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j+1]=temp;<comment>/*j=i-1时不用复制*/</comment></p>
+                            <p class="p11">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="p12">}</p>
+                        </div>
+                        <div id="chooseSort">
+                            <h4>/*选择排序*/</h4>
+                            <p class="q1">void selectSort(SortObject *pvector){<comment>/*按递增序进行直接选择排序*/</comment></p>
+                            <p class="q2">&nbsp;&nbsp;&nbsp;&nbsp;int i, j, k;</p>
+                            <p class="q3">&nbsp;&nbsp;&nbsp;&nbsp;RecordNode temp, *data = pvector->record;</p>
+                            <p class="q4">&nbsp;&nbsp;&nbsp;&nbsp;for (i = 0; i < pvector->n - 1; i++){<comment>/*做n-1趟选择排序*/</comment></p>
+                            <p class="q5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k = i;</p>
+                            <p class="q6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (j = i + 1; j < pvector->n; j++)<comment>/*在无序段找最小记录*/</comment></p>
+                            <p class="q7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (data[j].key < data[k].key)</p>
+                            <p class="q8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k = j;</p>
+                            <p class="q9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (k != i){<comment>/*需要时交换记录*/</comment></p>
+                            <p class="q10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp = data[i];</p>
+                            <p class="q11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[i] = data[k];</p>
+                            <p class="q12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[k] = temp;</p>
+                            <p class="q13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="q14">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="q15">}</p>
+                        </div>
+                        <div id="heapSort">
+                            <h4>/*冒泡排序*/</h4>
+                            <p class="w1">void bubbleSort(SortObeject* pvector){</p>
+                            <p class="w2">&nbsp;&nbsp;&nbsp;&nbsp;int i,j,noswap;</p>
+                            <p class="w3">&nbsp;&nbsp;&nbsp;&nbsp;RecordNode temp,*data=pvector->record;</p>
+                            <p class="w4">&nbsp;&nbsp;&nbsp;&nbsp;for(i=0;i < pvector->n - 1;i++){    <comment>/*做n-1次冒泡*/</comment></p>
+                            <p class="w5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;noswap=TRUE;      <comment>/*置交换标志*/</comment></p>
+                            <p class="w6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for(j=0;j< pvector->n - i - 1;j++)    <comment>/*从前向后扫描*/</comment></p>
+                            <p class="w7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(data[j+1].key < data[j].key){     <comment>/*交换记录*/</comment></p>
+                            <p class="w8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp=data[j]</p>
+                            <p class="w9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j]=data[j+1];</p>
+                            <p class="w10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;data[j+1]=temp;</p>
+                            <p class="w11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;noswap=FALSE;</p>
+                            <p class="w12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="w13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(noswap)    <comment>/*一遍冒泡未发生交换，算法结束*/</comment></p>
+                            <p class="w14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break;</p>
+                            <p class="w15">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="w16">}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var draw = SVG("draw").size(1200, 500);
+    var autoI = false, autoS = false, autoB = false;
+    var exeI = false, exeS = false, exeB = false;
+    function jump(come, type, ob){
+        if(autoI || autoS || autoB || exeI || exeS || exeB){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+    var startX = 60;
+    var startY = 20;
+    var rectWidth = 80;
+    var rectHeight = 60;
+
+    var insertArray;
+    var selectArray;
+    var bubbleArray;
+    var sortArray = new Array();
+
+    var times = 0;
+    var timePara = 1;
+    var flagI, flagJ, flagK;
+    var initI = false, initJ = false;
+    var arrowI, arrowJ, arrowK;
+    var textI, textJ, textK;
+    var temp, tempText;
+    var positionI, positionJ, positionK;
+    var noswap = false;
+
+    function singleInsert(){
+        if(autoI){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("p" + timePara);
+            insertArray = $("#insertArray").val().split(',');
+            if(insertArray.length <= 0 || $("#insertArray").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入待排序的数组!\n");
+                return;
+            }
+            exeI = true;
+            draw.clear();
+            drawRect(rectWidth, rectHeight, startX, startY);
+            for(var i = 0; i < insertArray.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                sortArray[i] = drawText(insertArray[i], 24, startX + (2.5 + i) * rectWidth, startY + 0.3 * rectHeight);
+                drawText(i.toString(), 20, startX + (2.5 + i) * rectWidth, startY + rectHeight + 10);
+            }
+            timePara++;
+        }else if(times == 2){
+            high("p" + timePara);
+            textI = drawText("i", 24, 100, 175);
+            textJ = drawText("j", 24, 110, 175);
+            positionI = 0;
+            positionJ = 0;
+            arrowI = draw.polygon("100,125 104,135 102,135 102,170 98,170 98,135 96,135").fill({color: "red"}).stroke("none");
+            arrowJ = draw.polygon("110,125 114,135 112,135 112,170 108,170 108,135 106,135").fill({color: "green"}).stroke("none");
+            timePara++;
+        }else if(times == 3){
+            high("p" + timePara);
+            drawText("temp", 20, startX + 0.5 * rectWidth, startY + rectHeight + 10);
+            tempText = drawText("", 24, startX + 0.5 * rectWidth, startY + 0.2 * rectHeight);
+            timePara++;
+        }else if(times == 4){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 5){
+            high("p" + timePara);
+            if(!initI){
+                flagI = 1;
+                arrowI.animate(500, ">", 500).dx(3 * rectWidth);
+                textI.animate(500, ">", 500).dx(3 * rectWidth);
+                positionI = 3;
+                initI = true;
+            }else{
+                ++flagI;
+                ++positionI;
+                arrowI.animate(500, ">", 500).dx(rectWidth);
+                textI.animate(500, ">", 500).dx(rectWidth);
+            }
+            if(flagI < insertArray.length){
+                timePara++;
+            }else{
+                times = 11;
+                timePara = 12;
+            }
+        }else if(times == 6){
+            high("p" + timePara);
+            temp = insertArray[flagI];
+            tempText.text(temp);
+            timePara++;
+        }else if(times == 7){
+            high("p" + timePara);
+            if(!initJ){
+                flagJ = flagI - 1;
+                arrowJ.animate(500, ">", 500).dx((-positionJ + positionI - 1) * rectWidth);
+                textJ.animate(500, ">", 500).dx((-positionJ + positionI - 1) * rectWidth);
+                positionJ = positionI - 1;
+                initJ = true;
+            }else{
+                flagJ--;
+                arrowJ.animate(500, ">", 500).dx(-rectWidth);
+                textJ.animate(500, ">", 500).dx(-rectWidth);
+                positionJ--;
+            }
+            if(parseInt(temp) < parseInt(insertArray[flagJ]) && flagJ >= 0){
+                timePara++;
+            }else{
+                times = 8;
+                timePara = 9;
+                initJ = false;
+            }
+        }else if(times == 8){
+            high("p" + timePara);
+            insertArray[flagJ + 1] = insertArray[flagJ];
+            sortArray[flagJ + 1].text(insertArray[flagJ].toString());
+            times = 6;
+            timePara = 7;
+        }else if(times == 9){
+            high("p" + timePara);
+            if(flagJ != flagI - 1){
+                timePara++;
+            }else{
+                times = 10;
+                timePara = 11;
+            }
+        }else if(times == 10){
+            high("p" + timePara);
+            insertArray[flagJ + 1] = temp;
+            sortArray[flagJ + 1].text(temp.toString());
+            timePara++;
+        }else if(times == 11){
+            high("p" + timePara);
+            times = 4;
+            timePara = 5;
+        }else if(times == 12){
+            high("p" + timePara);
+            sortArray.length = 0;
+            times = 0;
+            timePara = 1;
+            initI = false, initJ = false;
+            exeI = false;
+            temp = null;
+            alert("直接插入排序完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("pvector,data", insertArray.join(','), "待排序数组");
+        displayTable("i", flagI, "循环变量");
+        displayTable("j", flagJ, "循环变量");
+        displayTable("temp", temp, "临时变量");
+    }
+    function insertSort(){
+        if(autoI || exeI){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("p" + timePara);
+                insertArray = $("#insertArray").val().split(',');
+                if(insertArray.length <= 0 || $("#insertArray").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入待排序的数组!\n");
+                    return;
+                }
+                autoI = true;
+                draw.clear();
+                drawRect(rectWidth, rectHeight, startX, startY);
+                for(var i = 0; i < insertArray.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                    sortArray[i] = drawText(insertArray[i], 24, startX + (2.5 + i) * rectWidth, startY + 0.3 * rectHeight);
+                    drawText(i.toString(), 20, startX + (2.5 + i) * rectWidth, startY + rectHeight + 10);
+                }
+                timePara++;
+            }else if(times == 2){
+                high("p" + timePara);
+                textI = drawText("i", 24, 100, 175);
+                textJ = drawText("j", 24, 110, 175);
+                positionI = 0;
+                positionJ = 0;
+                arrowI = draw.polygon("100,125 104,135 102,135 102,170 98,170 98,135 96,135").fill({color: "red"}).stroke("none");
+                arrowJ = draw.polygon("110,125 114,135 112,135 112,170 108,170 108,135 106,135").fill({color: "green"}).stroke("none");
+                timePara++;
+            }else if(times == 3){
+                high("p" + timePara);
+                drawText("temp", 20, startX + 0.5 * rectWidth, startY + rectHeight + 10);
+                tempText = drawText("", 24, startX + 0.5 * rectWidth, startY + 0.2 * rectHeight);
+                timePara++;
+            }else if(times == 4){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 5){
+                high("p" + timePara);
+                if(!initI){
+                    flagI = 1;
+                    arrowI.animate(500, ">", 500).dx(3 * rectWidth);
+                    textI.animate(500, ">", 500).dx(3 * rectWidth);
+                    positionI = 3;
+                    initI = true;
+                }else{
+                    ++flagI;
+                    ++positionI;
+                    arrowI.animate(500, ">", 500).dx(rectWidth);
+                    textI.animate(500, ">", 500).dx(rectWidth);
+                }
+                if(flagI < insertArray.length){
+                    timePara++;
+                }else{
+                    times = 11;
+                    timePara = 12;
+                }
+            }else if(times == 6){
+                high("p" + timePara);
+                temp = insertArray[flagI];
+                tempText.text(temp);
+                timePara++;
+            }else if(times == 7){
+                high("p" + timePara);
+                if(!initJ){
+                    flagJ = flagI - 1;
+                    arrowJ.animate(500, ">", 500).dx((-positionJ + positionI - 1) * rectWidth);
+                    textJ.animate(500, ">", 500).dx((-positionJ + positionI - 1) * rectWidth);
+                    positionJ = positionI - 1;
+                    initJ = true;
+                }else{
+                    flagJ--;
+                    arrowJ.animate(500, ">", 500).dx(-rectWidth);
+                    textJ.animate(500, ">", 500).dx(-rectWidth);
+                    positionJ--;
+                }
+                if(parseInt(temp) < parseInt(insertArray[flagJ]) && flagJ >= 0){
+                    timePara++;
+                }else{
+                    times = 8;
+                    timePara = 9;
+                    initJ = false;
+                }
+            }else if(times == 8){
+                high("p" + timePara);
+                insertArray[flagJ + 1] = insertArray[flagJ];
+                sortArray[flagJ + 1].text(insertArray[flagJ].toString());
+                times = 6;
+                timePara = 7;
+            }else if(times == 9){
+                high("p" + timePara);
+                if(flagJ != flagI - 1){
+                    timePara++;
+                }else{
+                    times = 10;
+                    timePara = 11;
+                }
+            }else if(times == 10){
+                high("p" + timePara);
+                insertArray[flagJ + 1] = temp;
+                sortArray[flagJ + 1].text(temp.toString());
+                timePara++;
+            }else if(times == 11){
+                high("p" + timePara);
+                times = 4;
+                timePara = 5;
+            }else if(times == 12){
+                high("p" + timePara);
+                sortArray.length = 0;
+                times = 0;
+                timePara = 1;
+                initI = false, initJ = false;
+                autoI = false;
+                temp = null;
+                alert("直接插入排序完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("pvector,data", insertArray.join(','), "待排序数组");
+            displayTable("i", flagI, "循环变量");
+            displayTable("j", flagJ, "循环变量");
+            displayTable("temp", temp, "临时变量");
+            if(times < 12){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    function singleSelect(){
+        if(autoS){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("q" + timePara);
+            selectArray = $("#selectArray").val().split(',');
+            if(selectArray.length <= 0 || $("#selectArray").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入待排序的数组!\n");
+                return;
+            }
+            exeS = true;
+            draw.clear();
+            drawRect(rectWidth, rectHeight, startX, startY);
+            for(var i = 0; i < selectArray.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                sortArray[i] = drawText(selectArray[i], 24, startX + (2.5 + i) * rectWidth, startY + 0.3 * rectHeight);
+                drawText(i.toString(), 20, startX + (2.5 + i) * rectWidth, startY + rectHeight + 10);
+            }
+            timePara++;
+        }else if(times == 2){
+            high("q" + timePara);
+            textI = drawText("i", 24, 100, 175);
+            textJ = drawText("j", 24, 110, 175);
+            textK = drawText("k", 24, 90, 175);
+            positionI = 0;
+            positionJ = 0;
+            positionK = 0;
+            arrowI = draw.polygon("100,125 104,135 102,135 102,170 98,170 98,135 96,135").fill({color: "red"}).stroke("none");
+            arrowJ = draw.polygon("110,125 114,135 112,135 112,170 108,170 108,135 106,135").fill({color: "green"}).stroke("none");
+            arrowK = draw.polygon("90,125 94,135 92,135 92,170 88,170 88,135 86,135").fill({color: "blue"}).stroke("none");
+            timePara++;
+        }else if(times == 3){
+            high("q" + timePara);
+            drawText("temp", 20, startX + 0.5 * rectWidth, startY + rectHeight + 10);
+            tempText = drawText("", 24, startX + 0.5 * rectWidth, startY + 0.2 * rectHeight);
+            timePara++;
+        }else if(times == 4){
+            high("q" + timePara);
+            if(!initI){
+                flagI = 0;
+                initI = true;
+                arrowI.animate(500, ">", 500).dx(2 * rectWidth);
+                textI.animate(500, ">", 500).dx(2 * rectWidth);
+                positionI = 2;
+            }else{
+                flagI++;
+                positionI++;
+                arrowI.animate(500, ">", 500).dx(rectWidth);
+                textI.animate(500, ">", 500).dx(rectWidth);
+            }
+            if(flagI < selectArray.length - 1){
+                timePara++;
+            }else{
+                times = 14;
+                timePara = 15;
+            }
+        }else if(times == 5){
+            high("q" + timePara);
+            flagK = flagI;
+            arrowK.animate(500, ">", 500).dx((positionI - positionK) * rectWidth);
+            textK.animate(500, ">", 500).dx((positionI - positionK) * rectWidth);
+            positionK = positionI;
+            timePara++;
+        }else if(times == 6){
+            high("q" + timePara);
+            if(!initJ){
+                flagJ = flagI + 1;
+                arrowJ.animate(500, ">", 500).dx((positionI + 1 -positionJ) * rectWidth);
+                textJ.animate(500, ">", 500).dx((positionI + 1 -positionJ) * rectWidth);
+                positionJ = positionI + 1
+                initJ = true;
+            }else{
+                flagJ++;
+                positionJ++;
+                arrowJ.animate(500, ">", 500).dx(rectWidth);
+                textJ.animate(500, ">", 500).dx(rectWidth);
+            }
+            if(flagJ < selectArray.length){
+                timePara++;
+            }else{
+                times = 8;
+                timePara = 9;
+                initJ = false;
+            }
+        }else if(times == 7){
+            high("q" + timePara);
+            if(parseInt(selectArray[flagJ]) < parseInt(selectArray[flagK])){
+                timePara++;
+            }else{
+                times = 5;
+                timePara = 6;
+            }
+        }else if(times == 8){
+            high("q" + timePara);
+            flagK = flagJ;
+            arrowK.animate(500, ">", 500).dx((positionJ - positionK) * rectWidth);
+            textK.animate(500, ">", 500).dx((positionJ - positionK) * rectWidth);
+            positionK = positionJ;
+            times = 5;
+            timePara = 6;
+        }else if(times == 9){
+            high("q" + timePara);
+            if(flagK != flagI){
+                timePara++;
+            }else{
+                times = 13;
+                timePara = 14;
+            }
+        }else if(times == 10){
+            high("q" + timePara);
+            temp = selectArray[flagI];
+            tempText.text(temp.toString());
+            timePara++;
+        }else if(times == 11){
+            high("q" + timePara);
+            selectArray[flagI] = selectArray[flagK];
+            sortArray[flagI].text(selectArray[flagK].toString());
+            timePara++;
+        }else if(times == 12){
+            high("q" + timePara);
+            selectArray[flagK] = temp;
+            sortArray[flagK].text(temp.toString());
+            timePara++;
+        }else if(times == 13){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 14){
+            high("q" + timePara);
+            times = 3;
+            timePara = 4;
+        }else if(times == 15){
+            high("q" + timePara);
+            sortArray.length = 0;
+            times = 0;
+            timePara = 1;
+            initI = false, initJ = false;
+            temp = null;
+            exeS = false;
+            alert("直接选择排序完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("pvector,data", selectArray.join(','), "待排序数组");
+        displayTable("i", flagI, "循环变量");
+        displayTable("j", flagJ, "循环变量");
+        displayTable("k", flagK, "循环变量");
+        displayTable("temp", temp, "临时变量");
+    }
+    function selectSort(){
+        if(autoS || exeS){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("q" + timePara);
+                selectArray = $("#selectArray").val().split(',');
+                if(selectArray.length <= 0 || $("#selectArray").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入待排序的数组!\n");
+                    return;
+                }
+                autoS = true;
+                draw.clear();
+                drawRect(rectWidth, rectHeight, startX, startY);
+                for(var i = 0; i < selectArray.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                    sortArray[i] = drawText(selectArray[i], 24, startX + (2.5 + i) * rectWidth, startY + 0.3 * rectHeight);
+                    drawText(i.toString(), 20, startX + (2.5 + i) * rectWidth, startY + rectHeight + 10);
+                }
+                timePara++;
+            }else if(times == 2){
+                high("q" + timePara);
+                textI = drawText("i", 24, 100, 175);
+                textJ = drawText("j", 24, 110, 175);
+                textK = drawText("k", 24, 90, 175);
+                positionI = 0;
+                positionJ = 0;
+                positionK = 0;
+                arrowI = draw.polygon("100,125 104,135 102,135 102,170 98,170 98,135 96,135").fill({color: "red"}).stroke("none");
+                arrowJ = draw.polygon("110,125 114,135 112,135 112,170 108,170 108,135 106,135").fill({color: "green"}).stroke("none");
+                arrowK = draw.polygon("90,125 94,135 92,135 92,170 88,170 88,135 86,135").fill({color: "blue"}).stroke("none");
+                timePara++;
+            }else if(times == 3){
+                high("q" + timePara);
+                drawText("temp", 20, startX + 0.5 * rectWidth, startY + rectHeight + 10);
+                tempText = drawText("", 24, startX + 0.5 * rectWidth, startY + 0.2 * rectHeight);
+                timePara++;
+            }else if(times == 4){
+                high("q" + timePara);
+                if(!initI){
+                    flagI = 0;
+                    initI = true;
+                    arrowI.animate(500, ">", 500).dx(2 * rectWidth);
+                    textI.animate(500, ">", 500).dx(2 * rectWidth);
+                    positionI = 2;
+                }else{
+                    flagI++;
+                    positionI++;
+                    arrowI.animate(500, ">", 500).dx(rectWidth);
+                    textI.animate(500, ">", 500).dx(rectWidth);
+                }
+                if(flagI < selectArray.length - 1){
+                    timePara++;
+                }else{
+                    times = 14;
+                    timePara = 15;
+                }
+            }else if(times == 5){
+                high("q" + timePara);
+                flagK = flagI;
+                arrowK.animate(500, ">", 500).dx((positionI - positionK) * rectWidth);
+                textK.animate(500, ">", 500).dx((positionI - positionK) * rectWidth);
+                positionK = positionI;
+                timePara++;
+            }else if(times == 6){
+                high("q" + timePara);
+                if(!initJ){
+                    flagJ = flagI + 1;
+                    arrowJ.animate(500, ">", 500).dx((positionI + 1 -positionJ) * rectWidth);
+                    textJ.animate(500, ">", 500).dx((positionI + 1 -positionJ) * rectWidth);
+                    positionJ = positionI + 1
+                    initJ = true;
+                }else{
+                    flagJ++;
+                    positionJ++;
+                    arrowJ.animate(500, ">", 500).dx(rectWidth);
+                    textJ.animate(500, ">", 500).dx(rectWidth);
+                }
+                if(flagJ < selectArray.length){
+                    timePara++;
+                }else{
+                    times = 8;
+                    timePara = 9;
+                    initJ = false;
+                }
+            }else if(times == 7){
+                high("q" + timePara);
+                if(parseInt(selectArray[flagJ]) < parseInt(selectArray[flagK])){
+                    timePara++;
+                }else{
+                    times = 5;
+                    timePara = 6;
+                }
+            }else if(times == 8){
+                high("q" + timePara);
+                flagK = flagJ;
+                arrowK.animate(500, ">", 500).dx((positionJ - positionK) * rectWidth);
+                textK.animate(500, ">", 500).dx((positionJ - positionK) * rectWidth);
+                positionK = positionJ;
+                times = 5;
+                timePara = 6;
+            }else if(times == 9){
+                high("q" + timePara);
+                if(flagK != flagI){
+                    timePara++;
+                }else{
+                    times = 13;
+                    timePara = 14;
+                }
+            }else if(times == 10){
+                high("q" + timePara);
+                temp = selectArray[flagI];
+                tempText.text(temp.toString());
+                timePara++;
+            }else if(times == 11){
+                high("q" + timePara);
+                selectArray[flagI] = selectArray[flagK];
+                sortArray[flagI].text(selectArray[flagK].toString());
+                timePara++;
+            }else if(times == 12){
+                high("q" + timePara);
+                selectArray[flagK] = temp;
+                sortArray[flagK].text(temp.toString());
+                timePara++;
+            }else if(times == 13){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 14){
+                high("q" + timePara);
+                times = 3;
+                timePara = 4;
+            }else if(times == 15){
+                high("q" + timePara);
+                sortArray.length = 0;
+                times = 0;
+                timePara = 1;
+                initI = false, initJ = false;
+                temp = null;
+                autoS = false;
+                alert("直接选择排序完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("pvector,data", selectArray.join(','), "待排序数组");
+            displayTable("i", flagI, "循环变量");
+            displayTable("j", flagJ, "循环变量");
+            displayTable("k", flagK, "循环变量");
+            displayTable("temp", temp, "临时变量");
+            if(times < 15){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    function singleBubble(){
+        if(autoB){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("w" + timePara);
+            bubbleArray = $("#bubbleArray").val().split(',');
+            if(bubbleArray.length <= 0 || $("#bubbleArray").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入待排序的数组!\n");
+                return;
+            }
+            exeB = true;
+            draw.clear();
+            drawRect(rectWidth, rectHeight, startX, startY);
+            for(var i = 0; i < bubbleArray.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                sortArray[i] = drawText(bubbleArray[i], 24, startX + (2.5 + i) * rectWidth, startY + 0.3 * rectHeight);
+                drawText(i.toString(), 20, startX + (2.5 + i) * rectWidth, startY + rectHeight + 10);
+            }
+            timePara++;
+        }else if(times == 2){
+            high("w" + timePara);
+            textI = drawText("i", 24, 100, 175);
+            textJ = drawText("j", 24, 110, 175);
+            positionI = 0;
+            positionJ = 0;
+            arrowI = draw.polygon("100,125 104,135 102,135 102,170 98,170 98,135 96,135").fill({color: "red"}).stroke("none");
+            arrowJ = draw.polygon("110,125 114,135 112,135 112,170 108,170 108,135 106,135").fill({color: "green"}).stroke("none");
+            timePara++;
+        }else if(times == 3){
+            high("w" + timePara);
+            drawText("temp", 20, startX + 0.5 * rectWidth, startY + rectHeight + 10);
+            tempText = drawText("", 24, startX + 0.5 * rectWidth, startY + 0.2 * rectHeight);
+            timePara++;
+        }else if(times == 4){
+            high("w" + timePara);
+            if(!initI){
+                flagI = 0;
+                initI = true;
+                arrowI.animate(500, ">", 500).dx(2 * rectWidth);
+                textI.animate(500, ">", 500).dx(2 * rectWidth);
+                positionI = 2;
+            }else{
+                flagI++;
+                positionI++;
+                arrowI.animate(500, ">", 500).dx(rectWidth);
+                textI.animate(500, ">", 500).dx(rectWidth);
+            }
+            if(flagI < bubbleArray.length - 1){
+                timePara++;
+            }else{
+                times = 15;
+                timePara = 16;
+            }
+        }else if(times == 5){
+            high("w" + timePara);
+            noswap = true;
+            timePara++;
+        }else if(times == 6){
+            high("w" + timePara);
+            if(!initJ){
+                flagJ = 0;
+                arrowJ.animate(500, ">", 500).dx((2 - positionJ) * rectWidth);
+                textJ.animate(500, ">", 500).dx((2 - positionJ) * rectWidth);
+                positionJ = 2
+                initJ = true;
+            }else{
+                flagJ++;
+                positionJ++;
+                arrowJ.animate(500, ">", 500).dx(rectWidth);
+                textJ.animate(500, ">", 500).dx(rectWidth);
+            }
+            if(flagJ < bubbleArray.length - flagI - 1){
+                timePara++;
+            }else{
+                times = 12;
+                timePara = 13;
+                initJ = false;
+            }
+        }else if(times == 7){
+            high("w" + timePara);
+            if(parseInt(bubbleArray[flagJ + 1]) < parseInt(bubbleArray[flagJ])){
+                timePara++;
+            }else{
+                times = 11;
+                timePara = 12;
+            }
+        }else if(times == 8){
+            high("w" + timePara);
+            temp = bubbleArray[flagJ];
+            tempText.text(temp.toString());
+            timePara++;
+        }else if(times == 9){
+            high("w" + timePara);
+            bubbleArray[flagJ] = bubbleArray[flagJ + 1];
+            sortArray[flagJ].text(bubbleArray[flagJ + 1]);
+            timePara++;
+        }else if(times == 10){
+            high("w" + timePara);
+            bubbleArray[flagJ + 1] = temp;
+            sortArray[flagJ + 1].text(temp.toString());
+            timePara++;
+        }else if(times == 11){
+            high("w" + timePara);
+            noswap = false;
+            timePara++;
+        }else if(times == 12){
+            high("w" + timePara);
+            times = 5;
+            timePara = 6;
+        }else if(times == 13){
+            high("w" + timePara);
+            if(noswap){
+                timePara++;
+            }else{
+                times = 14;
+                timePara = 15
+            }
+        }else if(times == 14){
+            high("w" + timePara);
+            times = 15;
+            timePara = 16;
+        }else if(times == 15){
+            high("w" + timePara);
+            times = 3;
+            timePara = 4;
+        }else if(times == 16){
+            high("w" + timePara);
+            sortArray.length = 0;
+            times = 0;
+            timePara = 1;
+            initI = false, initJ = false;
+            exeB = false;
+            temp = null;
+            alert("冒泡排序完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("pvector,data", bubbleArray.join(','), "待排序数组");
+        displayTable("i", flagI, "循环变量");
+        displayTable("j", flagJ, "循环变量");
+        displayTable("temp", temp, "临时变量");
+        displayTable("noswap", noswap, "交换标志");
+    }
+    function bubbleSort(){
+        if(autoB || exeB){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("w" + timePara);
+                bubbleArray = $("#bubbleArray").val().split(',');
+                if(bubbleArray.length <= 0 || $("#bubbleArray").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入待排序的数组!\n");
+                    return;
+                }
+                autoB = true;
+                draw.clear();
+                drawRect(rectWidth, rectHeight, startX, startY);
+                for(var i = 0; i < bubbleArray.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                    sortArray[i] = drawText(bubbleArray[i], 24, startX + (2.5 + i) * rectWidth, startY + 0.3 * rectHeight);
+                    drawText(i.toString(), 20, startX + (2.5 + i) * rectWidth, startY + rectHeight + 10);
+                }
+                timePara++;
+            }else if(times == 2){
+                high("w" + timePara);
+                textI = drawText("i", 24, 100, 175);
+                textJ = drawText("j", 24, 110, 175);
+                positionI = 0;
+                positionJ = 0;
+                arrowI = draw.polygon("100,125 104,135 102,135 102,170 98,170 98,135 96,135").fill({color: "red"}).stroke("none");
+                arrowJ = draw.polygon("110,125 114,135 112,135 112,170 108,170 108,135 106,135").fill({color: "green"}).stroke("none");
+                timePara++;
+            }else if(times == 3){
+                high("w" + timePara);
+                drawText("temp", 20, startX + 0.5 * rectWidth, startY + rectHeight + 10);
+                tempText = drawText("", 24, startX + 0.5 * rectWidth, startY + 0.2 * rectHeight);
+                timePara++;
+            }else if(times == 4){
+                high("w" + timePara);
+                if(!initI){
+                    flagI = 0;
+                    initI = true;
+                    arrowI.animate(500, ">", 500).dx(2 * rectWidth);
+                    textI.animate(500, ">", 500).dx(2 * rectWidth);
+                    positionI = 2;
+                }else{
+                    flagI++;
+                    positionI++;
+                    arrowI.animate(500, ">", 500).dx(rectWidth);
+                    textI.animate(500, ">", 500).dx(rectWidth);
+                }
+                if(flagI < bubbleArray.length - 1){
+                    timePara++;
+                }else{
+                    times = 15;
+                    timePara = 16;
+                }
+            }else if(times == 5){
+                high("w" + timePara);
+                noswap = true;
+                timePara++;
+            }else if(times == 6){
+                high("w" + timePara);
+                if(!initJ){
+                    flagJ = 0;
+                    arrowJ.animate(500, ">", 500).dx((2 - positionJ) * rectWidth);
+                    textJ.animate(500, ">", 500).dx((2 - positionJ) * rectWidth);
+                    positionJ = 2
+                    initJ = true;
+                }else{
+                    flagJ++;
+                    positionJ++;
+                    arrowJ.animate(500, ">", 500).dx(rectWidth);
+                    textJ.animate(500, ">", 500).dx(rectWidth);
+                }
+                if(flagJ < bubbleArray.length - flagI - 1){
+                    timePara++;
+                }else{
+                    times = 12;
+                    timePara = 13;
+                    initJ = false;
+                }
+            }else if(times == 7){
+                high("w" + timePara);
+                if(parseInt(bubbleArray[flagJ + 1]) < parseInt(bubbleArray[flagJ])){
+                    timePara++;
+                }else{
+                    times = 11;
+                    timePara = 12;
+                }
+            }else if(times == 8){
+                high("w" + timePara);
+                temp = bubbleArray[flagJ];
+                tempText.text(temp.toString());
+                timePara++;
+            }else if(times == 9){
+                high("w" + timePara);
+                bubbleArray[flagJ] = bubbleArray[flagJ + 1];
+                sortArray[flagJ].text(bubbleArray[flagJ + 1]);
+                timePara++;
+            }else if(times == 10){
+                high("w" + timePara);
+                bubbleArray[flagJ + 1] = temp;
+                sortArray[flagJ + 1].text(temp.toString());
+                timePara++;
+            }else if(times == 11){
+                high("w" + timePara);
+                noswap = false;
+                timePara++;
+            }else if(times == 12){
+                high("w" + timePara);
+                times = 5;
+                timePara = 6;
+            }else if(times == 13){
+                high("w" + timePara);
+                if(noswap){
+                    timePara++;
+                }else{
+                    times = 14;
+                    timePara = 15
+                }
+            }else if(times == 14){
+                high("w" + timePara);
+                times = 15;
+                timePara = 16;
+            }else if(times == 15){
+                high("w" + timePara);
+                times = 3;
+                timePara = 4;
+            }else if(times == 16){
+                high("w" + timePara);
+                sortArray.length = 0;
+                times = 0;
+                timePara = 1;
+                initI = false, initJ = false;
+                temp = null;
+                noswap = false;
+                autoB = false;
+                alert("冒泡排序完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("pvector,data", bubbleArray.join(','), "待排序数组");
+            displayTable("i", flagI, "循环变量");
+            displayTable("j", flagJ, "循环变量");
+            displayTable("temp", temp, "临时变量");
+            displayTable("noswap", noswap, "交换标志");
+            if(times < 16){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+</script>
+</body>
+</html>

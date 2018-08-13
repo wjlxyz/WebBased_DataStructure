@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>String</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -238px;
+            display: none;
+        }
+        .codeShow{
+            line-height: 110%;
+            height: 300px
+        }
+        .tableShow{
+            margin-top: 60px;
+        }
+        #KMPString, #NEXTString{
+            display: none;
+        }
+        .drawing{
+            height: 220px;
+            width: 100%;
+        }
+        input{
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">字<br>符<br>串</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+                </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('KMP', 'String', this)">K<br>M<br>P<br>模<br>式<br>匹<br>配</button>
+                <button type="button" class="btn btn-nav" onclick="jump('NEXT', 'String', this)">N<br>E<br>X<br>T<br>数<br>组</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="KMP">
+                        <label class="exeHint">请输入目标串</label>&nbsp;
+                        <input id="dstStr" type="text" placeholder="字母或数字，最大长度为8"/>&nbsp;&nbsp;
+                        <label class="exeHint">请输入模式串</label>&nbsp;
+                        <input id="patternStr" type="text" placeholder="字母或数字，最大长度为8">
+                        <button class="btn btn-primary btn-act" onclick="autoKmp()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleKmp()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="NEXT">
+                        <label class="exeHint">请输入模式串</label>&nbsp;
+                        <input id="nextPatern" type="text" placeholder="字母或数字，最大长度为8">
+                        <button class="btn btn-primary btn-act" onclick="autoNext()">自动计算NEXT数组</button>
+                        <button class="btn btn-act btn-primary" onclick="singleNext()">单步执行</button>
+                    </span>
+                </span>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="drawing">
+                        <div id="draw"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tableShow col-md-5">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>变量名</th>
+                            <th>变量值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-7 showing">
+                    <div class="codeShow">
+                        <div id="KMPString">
+                            <h4>/*KMP模式匹配*/</h4>
+                            <p class="p1">int pMatch(PSeqString t,PSeqString p,int* next){</p>
+                            <p class="p2">&nbsp;&nbsp;&nbsp;&nbsp;int i,j;</p>
+                            <p class="p3">&nbsp;&nbsp;&nbsp;&nbsp;i=0;j=0;<comment>    /*初始化*/</comment></p>
+                            <p class="p4">&nbsp;&nbsp;&nbsp;&nbsp;while(i < p->n && j < t->n )<comment>/*反复比较*/</comment></p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(i==-1||p->c[i]==t->c[j]){</p>
+                            <p class="p6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;j++;<comment>/*继续匹配下一个字符*/</comment></p>
+                            <p class="p7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="p8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<comment>  /*j不变,i后退*/</comment></p>
+                            <p class="p9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i=next[i]; </p>
+                            <p class="p10">&nbsp;&nbsp;&nbsp;&nbsp;if(i>=p->n)<comment>/*匹配成功,返回p中第一个字符在t中的序号*/</comment></p>
+                            <p class="p11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return(j-p->n+1);</p>
+                            <p class="p12">&nbsp;&nbsp;&nbsp;&nbsp;else <comment>/*匹配失败*/</comment></p>
+                            <p class="p13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="p14">}</p>
+                        </div>
+                        <div id="NEXTString">
+                            <h4>/*求NEXT数组*/</h4>
+                            <p class="q1">makeNext(PSeqString p,int *next){</p>
+                            <p class="q2">&nbsp;&nbsp;&nbsp;&nbsp;int i=0,k=-1;</p>
+                            <p class="q3">&nbsp;&nbsp;&nbsp;&nbsp;next[0]=-1;   <comment>/*初始化*/</comment></p>
+                            <p class="q4">&nbsp;&nbsp;&nbsp;&nbsp;while(i < p->n - 1){ <comment>/*计算next[i+1]*/</comment></p>
+                            <p class="q5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(k>=0&&p->c[i]!=p->c[k])</p>
+                            <p class="q6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k=next[k];</p>
+                            <p class="q7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i++;k++;</p>
+                            <p class="q8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(p->c[i]==p->c[k])<comment> /*填写next[i],同时考虑改善*/</comment></p>
+                            <p class="q9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next[i]=next[k];</p>
+                            <p class="q10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</p>
+                            <p class="q11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;next[i]=k;</p>
+                            <p class="q12">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="q13">}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var autoK = false, autoN = false;
+    var exeK = false, exeN = false;
+
+    var draw = SVG("draw").size(1200, 300);
+    function jump(come, type, ob){
+        if(autoK || autoN || exeK || exeN){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+
+    var startX = 40;
+    var startY = 30;
+    var rectWidth = 80;
+    var rectHeight = 50;
+
+    var nextRect = new Array();
+    var nextText = new Array();
+    var arrowI, arrowK;
+    var textI, textK;
+    var p_nextSet = draw.set();
+
+
+
+    var timeN = 0;
+    var timeNPara = 1;
+    var nextArray = new Array();
+    var flagI, flagK;
+    var nextStr;
+    var positionK;
+    function singleNext(){
+        if(autoN){
+            return;
+        }
+        timeN++;
+        if(timeN == 1){
+            high("q" + timeNPara);
+            nextStr = $("#nextPatern").val();
+            if(nextStr == ""){
+                timeN = 0;
+                timeNPara = 1;
+                alert("请输入模式串!\n");
+                return;
+            }
+            exeN = true;
+            draw.clear();
+            drawText("P串", 32, startX, startY);
+            for(var i = 0; i < nextStr.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY);
+                drawText(nextStr[i], 24, startX + (i + 1.5) * rectWidth, startY + rectHeight * 0.3);
+            }
+            drawText("Next", 32, startX, startY + rectHeight * 1.70);
+            for(var i = 0; i < nextStr.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY + 1.5 * rectHeight);
+            }
+            drawText("P串", 32, startX, startY + 3.2 * rectHeight);
+            for(var i = 0; i < nextStr.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (i + 2) * rectWidth, startY + 3 * rectHeight);
+                drawText(nextStr[i], 24, startX + (i + 2.5) * rectWidth, startY + 3.3 * rectHeight);
+            }
+            timeNPara++;
+        }else if(timeN == 2){//int i=0, k=-1
+            high("q" + timeNPara);
+            flagI = 0;
+            flagK = -1;
+            //画两个指针
+            textI = drawText("i", 24, 180, 5);
+            arrowI = draw.polygon("145,-5 175,-5 160,20").fill({color: "red"}).stroke({width: 0});
+            textK = drawText("k", 24, 180, 245);
+            arrowK = draw.polygon("160,240 145,265 175,265").fill({color: "green"}).stroke({width: 0});
+            positionK = -1;
+            timeNPara++;
+        }else if(timeN == 3){//next[0]=-1
+            high("q" + timeNPara);
+            nextArray[0] = -1;
+            timeNPara++;
+        }else if(timeN == 4){//while(i < p.length - 1)
+            high("q" + timeNPara);
+            if(flagI >= nextStr.length - 1){
+                timeN = 11;
+                timeNPara = 12;
+            }else{
+                timeNPara++;
+            }
+        }else if(timeN == 5){//while(k>=0 && p->c[i]!=p->c[k])
+            high("q" + timeNPara);
+            if(flagK < 0 || nextStr[flagI] == nextStr[flagK]){
+                timeN = 6;
+                timeNPara = 7;
+            }else{
+                timeNPara++;
+            }
+        }else if(timeN == 6){
+            high("q" + timeNPara);
+            flagK = nextArray[flagK];
+            arrowK.animate(500, ">", 500).dx((flagK - positionK) * rectWidth);
+            textK.animate(500, ">", 500).dx((flagK - positionK) * rectWidth);
+            positionK = flagK;
+            //K的动画的指针没有移动
+            timeNPara++;
+        }else if(timeN == 7){
+            high("q" + timeNPara);
+            flagI++;
+            arrowI.animate(500, ">", 500).dx(rectWidth);
+            textI.animate(500, ">", 500).dx(rectWidth);
+            flagK++;
+            arrowK.animate(500, ">", 500).dx(rectWidth);
+            textK.animate(500, ">", 500).dx(rectWidth);
+            positionK++;
+            timeNPara++;
+        }else if(timeN == 8){
+            high("q" + timeNPara);
+            if(nextStr[flagI] != nextStr[flagK]){
+                timeN = 9;
+                timeNPara = 10;
+            }else {
+                timeNPara++;
+            }
+        }else if(timeN == 9){
+            high("q" + timeNPara);
+            nextArray[flagI] = nextArray[flagK];
+            timeN = 11;
+            timeNPara = 12;
+        }else if(timeN == 10){
+            high("q" + timeNPara);
+            timeNPara++;
+        }else if(timeN == 11){
+            high("q" + timeNPara);
+            nextArray[flagI] = flagK;
+            timeNPara++;
+        }else if(timeN == 12){
+            high("q" + timeNPara);
+            if(flagI >= nextStr.length - 1){
+                timeNPara++;
+            }else{
+                timeN = 3;
+                timeNPara = 4;
+            }
+        }else if(timeN == 13){
+            high("q" + timeNPara);
+            timeN = 0;
+            timeNPara = 1;
+            nextArray.length = 0;
+            exeN = false;
+            alert("求next数组完成!\n");
+            return;
+        }
+        for(var i = 0; i < nextArray.length; i++){
+            drawText(nextArray[i].toString(), 24, startX + (i + 1.5) * rectWidth, startY + 1.75 * rectHeight);
+        }
+        $("#tbody").html("");
+        displayTable("p", nextStr, "模式串");
+        displayTable("next", nextArray.join(','), "next数组");
+        displayTable("i", flagI, "循环变量");
+        displayTable("k", flagK, "循环变量");
+    }
+    function autoNext(){
+        if(autoN || exeN){
+            return;
+        }
+        nextStr = $("#nextPatern").val();
+        if(nextStr == ""){
+            alert("请输入模式串!\n");
+            return;
+        }
+        autoN = true;
+        setTimeout(function(){
+            timeN++;
+            if(timeN == 1){
+                high("q" + timeNPara);
+                autoN = true;
+                draw.clear();
+                drawText("P串", 32, startX, startY);
+                for(var i = 0; i < nextStr.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY);
+                    drawText(nextStr[i], 24, startX + (i + 1.5) * rectWidth, startY + rectHeight * 0.3);
+                }
+                drawText("Next", 32, startX, startY + rectHeight * 1.70);
+                for(var i = 0; i < nextStr.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY + 1.5 * rectHeight);
+                }
+                drawText("P串", 32, startX, startY + 3.2 * rectHeight);
+                for(var i = 0; i < nextStr.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (i + 2) * rectWidth, startY + 3 * rectHeight);
+                    drawText(nextStr[i], 24, startX + (i + 2.5) * rectWidth, startY + 3.3 * rectHeight);
+                }
+                timeNPara++;
+            }else if(timeN == 2){//int i=0, k=-1
+                high("q" + timeNPara);
+                flagI = 0;
+                flagK = -1;
+                //画两个指针
+                textI = drawText("i", 24, 180, 5);
+                arrowI = draw.polygon("145,-5 175,-5 160,20").fill({color: "red"}).stroke({width: 0});
+                textK = drawText("k", 24, 180, 245);
+                arrowK = draw.polygon("160,240 145,265 175,265").fill({color: "green"}).stroke({width: 0});
+                timeNPara++;
+            }else if(timeN == 3){//next[0]=-1
+                high("q" + timeNPara);
+                nextArray[0] = -1;
+                timeNPara++;
+            }else if(timeN == 4){//while(i < p.length - 1)
+                high("q" + timeNPara);
+                if(flagI >= nextStr.length - 1){
+                    timeN = 11;
+                    timeNPara = 12;
+                }else{
+                    timeNPara++;
+                }
+            }else if(timeN == 5){//while(k>=0 && p->c[i]!=p->c[k])
+                high("q" + timeNPara);
+                if(flagK < 0 || nextStr[flagI] == nextStr[flagK]){
+                    timeN = 6;
+                    timeNPara = 7;
+                }else{
+                    timeNPara++;
+                }
+            }else if(timeN == 6){
+                high("q" + timeNPara);
+                flagK = nextArray[flagK];
+                timeNPara++;
+            }else if(timeN == 7){
+                high("q" + timeNPara);
+                flagI++;
+                arrowI.animate(500, ">", 500).dx(rectWidth);
+                textI.animate(500, ">", 500).dx(rectWidth);
+                flagK++;
+                arrowK.animate(500, ">", 500).dx(rectWidth);
+                textK.animate(500, ">", 500).dx(rectWidth);
+                timeNPara++;
+            }else if(timeN == 8){
+                high("q" + timeNPara);
+                if(nextStr[flagI] != nextStr[flagK]){
+                    timeN = 9;
+                    timeNPara = 10;
+                }else {
+                    timeNPara++;
+                }
+            }else if(timeN == 9){
+                high("q" + timeNPara);
+                nextArray[flagI] = nextArray[flagK];
+                timeN = 11;
+                timeNPara = 12;
+            }else if(timeN == 10){
+                high("q" + timeNPara);
+                timeNPara++;
+            }else if(timeN == 11){
+                high("q" + timeNPara);
+                nextArray[flagI] = flagK;
+                timeNPara++;
+            }else if(timeN == 12){
+                high("q" + timeNPara);
+                if(flagI >= nextStr.length - 1){
+                    timeNPara++;
+                }else{
+                    timeN = 3;
+                    timeNPara = 4;
+                }
+            }else if(timeN == 13){
+                high("q" + timeNPara);
+                timeN = 0;
+                timeNPara = 1;
+                nextArray.length = 0;
+                autoN = false;
+                alert("求next数组完成!\n");
+                return;
+            }
+            for(var i = 0; i < nextArray.length; i++){
+                drawText(nextArray[i].toString(), 24, startX + (i + 1.5) * rectWidth, startY + 1.75 * rectHeight);
+            }
+            $("#tbody").html("");
+            displayTable("p", nextStr, "模式串");
+            displayTable("next", nextArray.join(','), "next数组");
+            displayTable("i", flagI, "循环变量");
+            displayTable("k", flagK, "循环变量");
+            if(timeN < 13){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    var timeK = 0;
+    var timeKPara = 1;
+    var kmpI, kmpJ;
+    var kmpNext = new Array();
+    var dstStr, patternStr;
+    var position;
+    function makeNext(str){
+        var i = 0, k = -1;
+        kmpNext[0] = -1;
+        while(i < str.length - 1){
+            while(k >= 0 && str[i] != str[k]){
+                k = kmpNext[k];
+            }
+            i++;k++;
+            if(str[i] == str[k]){
+                kmpNext[i] = kmpNext[k];
+            }else{
+                kmpNext[i] = k;
+            }
+        }
+    }
+    function singleKmp(){
+        if(autoK){
+            return;
+        }
+        timeK++;
+        if(timeK == 1){
+            high("p" + timeKPara);
+            dstStr = $("#dstStr").val();
+            if(dstStr == ""){
+                timeK = 0;
+                timeKPara = 1;
+                alert("请输入目标串!\n");
+                return;
+            }
+            patternStr = $("#patternStr").val();
+            if(patternStr == ""){
+                timeK = 0;
+                timeKPara = 1;
+                alert("请输入模式串!\n");
+                return;
+            }
+            exeK = true;
+            draw.clear();
+            makeNext(patternStr);
+            drawText("T串", 32, startX, startY);
+            for(var i = 0; i < dstStr.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY);
+                drawText(dstStr[i], 24, startX + (i + 1.5) * rectWidth, startY + rectHeight * 0.3);
+            }
+            drawText("P串", 32, startX, startY + rectHeight * 1.70);
+            for(var i = 0; i < patternStr.length; i++){
+                var rect = drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY + 1.5 * rectHeight);
+                var text = drawText(patternStr[i], 24, startX + (i + 1.5) * rectWidth, startY + 1.7 * rectHeight);
+                p_nextSet.add(rect).add(text);
+            }
+            drawText("NEXT", 32, startX, startY + 3.2 * rectHeight);
+            for(var i = 0; i < kmpNext.length; i++){
+                var rect = drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY + 3 * rectHeight);
+                var text = drawText(kmpNext[i].toString(), 24, startX + (i + 1.5) * rectWidth, startY + 3.2 * rectHeight);
+                p_nextSet.add(rect).add(text);
+            }
+            timeKPara++;
+        }else if(timeK == 2){
+            high("p" + timeKPara);
+            timeKPara++;
+        }else if(timeK == 3){
+            high("p" + timeKPara);
+            kmpI = 0;
+            kmpJ = 0;
+            textI = drawText("j", 24, 180, 0);
+            arrowI = draw.polygon("145,-5 175,-5 160,20").fill({color: "red"}).stroke({width: 0});
+            textK = drawText("i", 24, 180, 245);
+            arrowK = draw.polygon("160,240 145,265 175,265").fill({color: "green"}).stroke({width: 0});
+            timeKPara++;
+        }else if(timeK == 4){//while(i < p->n && j < t->n)
+            high("p" + timeKPara);
+            if(kmpI >= patternStr.length || kmpJ >= dstStr.length){
+                timeK = 9;
+                timeKPara = 10;
+            }else{
+                timeKPara++;
+            }
+        }else if(timeK == 5){
+            high("p" + timeKPara);
+            if(kmpI == -1 || patternStr[kmpI] == dstStr[kmpJ]){
+                timeKPara++;
+            }else{
+                timeK = 7;
+                timeKPara = 8;
+            }
+        }else if(timeK == 6){
+            high("p" + timeKPara);
+            kmpI++;
+            textI.animate(500, ">", 500).dx(rectWidth);
+            arrowI.animate(500, ">", 500).dx(rectWidth);
+            kmpJ++;
+            textK.animate(500, ">", 500).dx(rectWidth);
+            arrowK.animate(500, ">", 500).dx(rectWidth);
+            timeKPara++;
+        }else if(timeK == 7){
+            high("p" + timeKPara);
+            timeK = 3;
+            timeKPara = 4;
+        }else if(timeK == 8){
+            high("p" + timeKPara);
+            timeKPara++;
+        }else if(timeK == 9){
+            high("p" + timeKPara);
+            var tmp = kmpI;
+            kmpI = kmpNext[kmpI];
+            p_nextSet.animate(500, ">", 500).dx((tmp - kmpI) * rectWidth);
+            timeK = 3;
+            timeKPara = 4;
+        }else if(timeK == 10){
+            high("p" + timeKPara);
+            if(kmpI >= patternStr.length){
+                timeKPara++;
+            }else{
+                timeK = 11;
+                timeKPara = 12;
+            }
+        }else if(timeK == 11){
+            high("p" + timeKPara);
+            position = kmpJ - patternStr.length + 1;
+            timeK = 0;
+            timeKPara = 1;
+            displayTable("返回值", position, "");
+            exeK = false;
+            alert("匹配成功!\n");
+            return;
+        }else if(timeK == 12){
+            high("p" + timeKPara);
+            timeKPara++;
+        }else if(timeK == 13){
+            high("p" + timeKPara);
+            timeK = 0;
+            timeKPara = 1;
+            exeK = false;
+            alert("匹配失败!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("t", dstStr, "目标串");
+        displayTable("p", patternStr, "模式串");
+        displayTable("next", kmpNext.join(','), "next数组");
+        displayTable("i", kmpI, "循环变量");
+        displayTable("j", kmpJ, "循环变量");
+    }
+
+    function autoKmp(){
+        if(autoK || exeK){
+            return;
+        }
+        autoK = true;
+        setTimeout(function(){
+            timeK++;
+            if(timeK == 1){
+                high("p" + timeKPara);
+                dstStr = $("#dstStr").val();
+                if(dstStr == ""){
+                    timeK = 0;
+                    timeKPara = 1;
+                    autoK = false;
+                    alert("请输入目标串!\n");
+                    return;
+                }
+                patternStr = $("#patternStr").val();
+                if(patternStr == ""){
+                    timeK = 0;
+                    timeKPara = 1;
+                    autoK = false;
+                    alert("请输入模式串!\n");
+                    return;
+                }
+                draw.clear();
+                makeNext(patternStr);
+                drawText("T串", 32, startX, startY);
+                for(var i = 0; i < dstStr.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY);
+                    drawText(dstStr[i], 24, startX + (i + 1.5) * rectWidth, startY + rectHeight * 0.3);
+                }
+                drawText("P串", 32, startX, startY + rectHeight * 1.70);
+                for(var i = 0; i < patternStr.length; i++){
+                    var rect = drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY + 1.5 * rectHeight);
+                    var text = drawText(patternStr[i], 24, startX + (i + 1.5) * rectWidth, startY + 1.7 * rectHeight);
+                    p_nextSet.add(rect).add(text);
+                }
+                drawText("NEXT", 32, startX, startY + 3.2 * rectHeight);
+                for(var i = 0; i < kmpNext.length; i++){
+                    var rect = drawRect(rectWidth, rectHeight, startX + (i + 1) * rectWidth, startY + 3 * rectHeight);
+                    var text = drawText(kmpNext[i].toString(), 24, startX + (i + 1.5) * rectWidth, startY + 3.2 * rectHeight);
+                    p_nextSet.add(rect).add(text);
+                }
+                timeKPara++;
+            }else if(timeK == 2){
+                high("p" + timeKPara);
+                timeKPara++;
+            }else if(timeK == 3){
+                high("p" + timeKPara);
+                kmpI = 0;
+                kmpJ = 0;
+                textI = drawText("j", 24, 180, 0);
+                arrowI = draw.polygon("145,-5 175,-5 160,20").fill({color: "red"}).stroke({width: 0});
+                textK = drawText("i", 24, 180, 245);
+                arrowK = draw.polygon("160,240 145,265 175,265").fill({color: "green"}).stroke({width: 0});
+                timeKPara++;
+            }else if(timeK == 4){//while(i < p->n && j < t->n)
+                high("p" + timeKPara);
+                if(kmpI >= patternStr.length || kmpJ >= dstStr.length){
+                    timeK = 9;
+                    timeKPara = 10;
+                }else{
+                    timeKPara++;
+                }
+            }else if(timeK == 5){
+                high("p" + timeKPara);
+                if(kmpI == -1 || patternStr[kmpI] == dstStr[kmpJ]){
+                    timeKPara++;
+                }else{
+                    timeK = 7;
+                    timeKPara = 8;
+                }
+            }else if(timeK == 6){
+                high("p" + timeKPara);
+                kmpI++;
+                textI.animate(500, ">", 500).dx(rectWidth);
+                arrowI.animate(500, ">", 500).dx(rectWidth);
+                kmpJ++;
+                textK.animate(500, ">", 500).dx(rectWidth);
+                arrowK.animate(500, ">", 500).dx(rectWidth);
+                timeKPara++;
+            }else if(timeK == 7){
+                high("p" + timeKPara);
+                timeK = 3;
+                timeKPara = 4;
+            }else if(timeK == 8){
+                high("p" + timeKPara);
+                timeKPara++;
+            }else if(timeK == 9){
+                high("p" + timeKPara);
+                var tmp = kmpI;
+                kmpI = kmpNext[kmpI];
+                p_nextSet.animate(500, ">", 500).dx((tmp - kmpI) * rectWidth);
+                timeK = 3;
+                timeKPara = 4;
+            }else if(timeK == 10){
+                high("p" + timeKPara);
+                if(kmpI >= patternStr.length){
+                    timeKPara++;
+                }else{
+                    timeK = 11;
+                    timeKPara = 12;
+                }
+            }else if(timeK == 11){
+                high("p" + timeKPara);
+                position = kmpJ - patternStr.length + 1;
+                timeK = 0;
+                timeKPara = 1;
+                displayTable("返回值", position, "");
+                autoK = false;
+                alert("匹配成功!\n");
+                return;
+            }else if(timeK == 12){
+                high("p" + timeKPara);
+                timeKPara++;
+            }else if(timeK == 13){
+                high("p" + timeKPara);
+                timeK = 0;
+                timeKPara = 1;
+                autoK = false;
+                alert("匹配失败!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("t", dstStr, "目标串");
+            displayTable("p", patternStr, "模式串");
+            displayTable("next", kmpNext.join(','), "next数组");
+            displayTable("i", kmpI, "循环变量");
+            displayTable("j", kmpJ, "循环变量");
+            if(autoK){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+</script>
+</body>
+</html>

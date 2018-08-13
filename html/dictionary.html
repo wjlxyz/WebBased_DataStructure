@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dictionary</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -216px;
+            display: none;
+        }
+        #binarySearch{
+            display: none;
+        }
+        .tableShow{
+            margin-top: 40px;
+        }
+        .codeShow{
+            line-height: 110%;
+            margin-top: 40px;
+        }
+        .drawing{
+            height: 220px;
+        }
+        input#array{
+            width: 200px;
+        }
+        input#key{
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">字<br>典</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('binary', 'Search', this)">二<br>分<br>法<br>查<br>找</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="binary">
+                        <label class="exeHint">按递增序排好的数组</label>
+                        <input id="array" type="text" placeholder="最多12个元素，英文逗号隔开"/>
+                        <label class="exeHint">要查找的key</label>
+                        <input id="key" type="text">
+                        <button class="btn btn-primary btn-act" onclick="binaryFind()">自动执行</button>
+                         <button class="btn btn-act btn-primary" onclick="singleFind()">单步执行</button>
+                    </span>
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="drawing">
+                        <div id="draw"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tableShow col-md-5">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>变量名</th>
+                            <th>变量值</th>
+                            <th>说明</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-7 showing">
+                    <div class="codeShow">
+                        <div id="binarySearch">
+                            <h4>/* 在字典中用二分法查找关键码为key的元素 */</h4>
+                            <p class="p1">int binarySearch(SeqDictionary *pdic, KeyType key, int *position){</p>
+                            <p class="p2">&nbsp;&nbsp;&nbsp;&nbsp;int low, mid, high;</p>
+                            <p class="p3">&nbsp;&nbsp;&nbsp;&nbsp;low = 0; high = pdic->n-1;</p>
+                            <p class="p4">&nbsp;&nbsp;&nbsp;&nbsp;while (low <= high){</p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mid = (low+high)/2;<comment>/*当前检索的中间位置*/</comment></p>
+                            <p class="p6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (pdic->element[mid].key == key){<comment>/*检索成功*/</comment></p>
+                            <p class="p7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*position = mid;</p>
+                            <p class="p8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 1;</p>
+                            <p class="p9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="p10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else if (pdic->element[mid].key > key)</p>
+                            <p class="p11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;high = mid - 1;<comment>/*要检索的元素在左半区*/</comment></p>
+                            <p class="p12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else</p>
+                            <p class="p13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;low = mid + 1;<comment>/*要检索的元素在右半区*/</comment></p>
+                            <p class="p14">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="p15">&nbsp;&nbsp;&nbsp;&nbsp;*position = low;return 0;<comment>/*检索失败*/</comment></p>
+                            <p class="p16">}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var auto = false, exe = false;
+    var draw = SVG("draw").size(1200, 300);
+
+    var startX = 40;
+    var startY = 10;
+    var rectWidth = 80;
+    var rectHeight = 50;
+
+    var lowArrow, lowText;
+    var midArrow, midText;
+    var highArrow, highText;
+
+    var arrayLow = -1, arrayMid = -1, arrayHigh = -1;
+    function jump(come, type, ob){
+        if(auto || exe){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+    function binaryFind(){
+        if(auto || exe){
+            return;
+        }
+        auto = true;
+        var array;
+        var key;
+        var times = 1;
+        var timePara = 1;
+        var fail = false, success = false;
+        var left = false;
+        var position = -1;
+        var lowPositionX = 0, highPositionX = 0, midPositionX = 0;
+        setTimeout(function(){
+            if(times == 1){
+                draw.clear();
+                array = $("#array").val().split(',');
+                key = $("#key").val();
+                if(array.length <= 0 || $("#array").val() == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入递增序的数组!\n");
+                    return;
+                }
+                if(key.length <= 0 || key == ""){
+                    times = 0;
+                    timePara = 1;
+                    alert("请输入要查找的key!\n");
+                    return;
+                }
+                high("p" + timePara);
+                timePara++;
+                drawRect(rectWidth, rectHeight, startX, startY);
+                drawText("key", 24, startX + 0.5 * rectWidth, startY + rectHeight);
+                drawText(key, 32, startX + 0.5 * rectWidth, 0.4 * rectHeight)
+                for(var i = 0; i < array.length; i++){
+                    drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                    drawText(array[i], 32, startX + (2.5 + i) * rectWidth, rectHeight * 0.4);
+                    drawText(i.toString(), 24, startX + (2.5 + i) * rectWidth, startY + rectHeight);
+                }
+
+            }else if(times == 2){
+                high("p" + timePara);
+                timePara++;
+                lowArrow = draw.polygon("88,100 103,120 93,120 93,180 83,180 83,120 73,120").fill({color:"blue"}).stroke({width:0});
+                lowText = drawText("low", 24, 85, 180);
+                midArrow = draw.polygon("88,100 103,120 93,120 93,180 83,180 83,120 73,120").fill({color:"red"}).stroke({width:0});
+                midText = drawText("mid", 24, 85, 200);
+                highArrow = draw.polygon("88,100 103,120 93,120 93,180 83,180 83,120 73,120").fill({color:"blue"}).stroke({width:0});
+                highText = drawText("high", 24, 85, 220);
+
+            }else if(times == 3){
+                high("p" + timePara);
+                timePara++;
+                arrayLow = 0;
+                lowPositionX = arrayLow + 2;
+                arrayHigh = array.length - 1;
+                highPositionX = arrayHigh + 2;
+                lowArrow.animate(500, ">", 500).dx(lowPositionX * rectWidth);
+                lowText.animate(500, ">", 500).dx(lowPositionX * rectWidth)
+
+                highArrow.animate(500, ">", 500).dx(highPositionX * rectWidth);
+                highText.animate(500, ">", 500).dx(highPositionX * rectWidth);
+            }else if(times == 4){
+                high("p" + timePara);
+                if(arrayLow > arrayHigh){
+                    timePara = 14;
+                    fail = true;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 5){
+                high("p" + timePara);
+                if(fail){
+                    console.log("检索失败!\n");
+                }else{
+                    midArrow.animate(500, ">", 500).dx((Math.floor((lowPositionX + highPositionX) / 2) - midPositionX) * rectWidth);
+                    midText.animate(500, ">", 500).dx((Math.floor((lowPositionX + highPositionX) / 2) - midPositionX) * rectWidth);
+                    arrayMid = Math.floor((arrayLow + arrayHigh) / 2);
+                    midPositionX = Math.floor((lowPositionX + highPositionX) / 2);
+                }
+                timePara++;
+            }else if(times == 6){
+                high("p" + timePara);
+                if(fail){
+                    auto = false;
+                    times = 0;
+                    timePara = 1;
+                    fail = false, success = false;
+                    left = false;
+                    position = -1;
+                    lowPositionX = 0, highPositionX = 0, midPositionX = 0;
+                    alert("检索失败!\n");
+                    return;
+                }else if(parseInt(array[arrayMid]) == parseInt(key)){//检索成功
+                    success = true;
+                    timePara++;
+                }else{
+                    timePara = 10;
+                }
+            }else if(times == 7){
+                high("p" + timePara);
+                if(success){
+                    position = arrayMid;
+                    timePara++;
+                }else if(parseInt(array[arrayMid]) > parseInt(key)){//左半区
+                    left = true;
+                    timePara++;
+                }else{
+                    timePara = 12;
+                    left = false;
+                }
+            }else if(times == 8){
+                high("p" + timePara);
+                if(success){
+                    timePara++;
+                }else if(left){
+                    highArrow.animate(500, ">", 500).dx((midPositionX - 1 - highPositionX) * rectWidth);
+                    highText.animate(500, ">", 500).dx((midPositionX - 1 - highPositionX) * rectWidth);
+                    arrayHigh = arrayMid - 1;
+                    highPositionX = midPositionX - 1;
+                    times = 3;//返回while
+                    timePara = 4;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 9){
+                high("p" + timePara);
+                if(success){
+                    auto = false;
+                    times = 0;
+                    timePara = 1;
+                    fail = false, success = false;
+                    left = false;
+                    position = -1;
+                    lowPositionX = 0, highPositionX = 0, midPositionX = 0;
+                    alert("检索成功!\n");
+                    return;
+                }else if(!left){
+                    lowArrow.animate(500, ">", 500).dx((midPositionX + 1 - lowPositionX) * rectWidth);
+                    lowText.animate(500, ">", 500).dx((midPositionX + 1 - lowPositionX) * rectWidth);
+                    arrayLow = arrayMid + 1;
+                    lowPositionX = midPositionX + 1;
+                    times = 3;//返回while
+                    timePara = 4;
+                }
+            }
+            $("#tbody").html("");
+            displayTable("pdic", array.join(','), "有关顺序表");
+            displayTable("key", key, "查找的关键码");
+            displayTable("position", position, "key在pdic中的位置");
+            displayTable("low", arrayLow, "查找区间下界");
+            displayTable("mid", arrayMid, "当前检索的中间位置");
+            displayTable("high", arrayHigh, "查找区间上界");
+            if(!fail || !success){
+                times++;
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+    var array;
+    var key;
+    var times = 0;
+    var timePara = 1;
+    var fail = false, success = false;
+    var left = false;
+    var position = -1;
+    var lowPositionX = 0, highPositionX = 0, midPositionX = 0;
+    function singleFind(){
+        if(auto){
+            return;
+        }
+        times++;
+        if(times == 1){
+            draw.clear();
+            array = $("#array").val().split(',');
+            key = $("#key").val();
+            if(array.length <= 0 || $("#array").val() == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入递增序的数组!\n");
+                return;
+            }
+            if(key.length <= 0 || key == ""){
+                times = 0;
+                timePara = 1;
+                alert("请输入要查找的key!\n");
+                return;
+            }
+            exe = true;
+            high("p" + timePara);
+            timePara++;
+            drawRect(rectWidth, rectHeight, startX, startY);
+            drawText("key", 24, startX + 0.5 * rectWidth, startY + rectHeight);
+            drawText(key, 32, startX + 0.5 * rectWidth, 0.4 * rectHeight)
+            for(var i = 0; i < array.length; i++){
+                drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY);
+                drawText(array[i], 32, startX + (2.5 + i) * rectWidth, rectHeight * 0.4);
+                drawText(i.toString(), 24, startX + (2.5 + i) * rectWidth, startY + rectHeight);
+            }
+
+        }else if(times == 2){
+            high("p" + timePara);
+            timePara++;
+            lowArrow = draw.polygon("88,100 103,120 93,120 93,180 83,180 83,120 73,120").fill({color:"blue"}).stroke({width:0});
+            lowText = drawText("low", 24, 85, 180);
+            midArrow = draw.polygon("88,100 103,120 93,120 93,180 83,180 83,120 73,120").fill({color:"red"}).stroke({width:0});
+            midText = drawText("mid", 24, 85, 200);
+            highArrow = draw.polygon("88,100 103,120 93,120 93,180 83,180 83,120 73,120").fill({color:"blue"}).stroke({width:0});
+            highText = drawText("high", 24, 85, 220);
+
+        }else if(times == 3){
+            high("p" + timePara);
+            timePara++;
+            arrayLow = 0;
+            lowPositionX = arrayLow + 2;
+            arrayHigh = array.length - 1;
+            highPositionX = arrayHigh + 2;
+            lowArrow.animate(500, ">", 500).dx(lowPositionX * rectWidth);
+            lowText.animate(500, ">", 500).dx(lowPositionX * rectWidth)
+
+            highArrow.animate(500, ">", 500).dx(highPositionX * rectWidth);
+            highText.animate(500, ">", 500).dx(highPositionX * rectWidth);
+        }else if(times == 4){
+            high("p" + timePara);
+            if(arrayLow > arrayHigh){
+                timePara = 14;
+                fail = true;
+            }else{
+                timePara++;
+            }
+        }else if(times == 5){
+            high("p" + timePara);
+            if(fail){
+                console.log("检索失败!\n");
+            }else{
+                midArrow.animate(500, ">", 500).dx((Math.floor((lowPositionX + highPositionX) / 2) - midPositionX) * rectWidth);
+                midText.animate(500, ">", 500).dx((Math.floor((lowPositionX + highPositionX) / 2) - midPositionX) * rectWidth);
+                arrayMid = Math.floor((arrayLow + arrayHigh) / 2);
+                midPositionX = Math.floor((lowPositionX + highPositionX) / 2);
+            }
+            timePara++;
+        }else if(times == 6){
+            high("p" + timePara);
+            if(fail){
+                exe = false;
+                times = 0;
+                timePara = 1;
+                fail = false, success = false;
+                left = false;
+                position = -1;
+                lowPositionX = 0, highPositionX = 0, midPositionX = 0;
+                alert("检索失败!\n");
+                return;
+            }else if(parseInt(array[arrayMid]) == parseInt(key)){//检索成功
+                success = true;
+                timePara++;
+            }else{
+                timePara = 10;
+            }
+        }else if(times == 7){
+            high("p" + timePara);
+            if(success){
+                position = arrayMid;
+                timePara++;
+            }else if(parseInt(array[arrayMid]) > parseInt(key)){//左半区
+                left = true;
+                timePara++;
+            }else{
+                timePara = 12;
+                left = false;
+            }
+        }else if(times == 8){
+            high("p" + timePara);
+            if(success){
+                timePara++;
+            }else if(left){
+                highArrow.animate(500, ">", 500).dx((midPositionX - 1 - highPositionX) * rectWidth);
+                highText.animate(500, ">", 500).dx((midPositionX - 1 - highPositionX) * rectWidth);
+                arrayHigh = arrayMid - 1;
+                highPositionX = midPositionX - 1;
+                times = 3;//返回while
+                timePara = 4;
+            }else{
+                timePara++;
+            }
+        }else if(times == 9){
+            high("p" + timePara);
+            if(success){
+                exe = false;
+                times = 0;
+                timePara = 1;
+                fail = false, success = false;
+                left = false;
+                position = -1;
+                lowPositionX = 0, highPositionX = 0, midPositionX = 0;
+                alert("检索成功!\n");
+                return;
+            }else if(!left){
+                lowArrow.animate(500, ">", 500).dx((midPositionX + 1 - lowPositionX) * rectWidth);
+                lowText.animate(500, ">", 500).dx((midPositionX + 1 - lowPositionX) * rectWidth);
+                arrayLow = arrayMid + 1;
+                lowPositionX = midPositionX + 1;
+                times = 3;//返回while
+                timePara = 4;
+            }
+        }
+
+        $("#tbody").html("");
+        displayTable("pdic", array.join(','), "有关顺序表");
+        displayTable("key", key, "查找的关键码");
+        displayTable("position", position, "key在pdic中的位置");
+        displayTable("low", arrayLow, "查找区间下界");
+        displayTable("mid", arrayMid, "当前检索的中间位置");
+        displayTable("high", arrayHigh, "查找区间上界");
+    }
+
+</script>
+</body>
+</html>

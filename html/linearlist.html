@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LinearList</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -324px;
+            display: none;
+        }
+        #createList, #insertList, #deleteList{
+            display: none;
+        }
+        .drawing{
+            height: 220px;
+            width: 100%;
+        }
+        .codeShow{
+            line-height: 110%;
+        }
+        .tableShow{
+            margin-top: 20px;
+        }
+        input#listData, input#listData2{
+            width: 200px;
+        }
+        input#insertOffset, input#deleteOffset{
+            width: 40px;
+        }
+        input#insertValue{
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">顺<br>序<br>表</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='linklist.html'">链<br>表</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('create', 'List', this)">创<br>建<br>空<br>顺<br>序<br>表</button>
+                <button type="button" class="btn btn-nav" onclick="jump('insert', 'List', this)">插<br>入<br>元<br>素</button>
+                <button type="button" class="btn btn-nav" onclick="jump('delete', 'List', this)">删<br>除<br>元<br>素</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="create">
+                        <button class="btn btn-act btn-primary" onclick="createList()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleCreate()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="insert">
+                        <label class="exeHint">请输入顺序表中元素</label>
+                        <input id="listData" placeholder="最多10个元素，英文逗号隔开" type="text">
+                        <label class="exeHint">请输入待插入下标</label>
+                        <input id="insertOffset" type="number">
+                        <label class="exeHint">请输入待插入的数据</label>
+                        <input id="insertValue" type="text">
+                        <button class="btn btn-act btn-primary" onclick="insertData()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleInsert()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="delete">
+                        <label class="exeHint">请输入顺序表中元素</label>
+                        <input id="listData2" placeholder="最多10个元素，英文逗号隔开">
+                        <label class="exeHint">请输入要删除元素的下标</label>&nbsp;
+                        <input id="deleteOffset">&nbsp;&nbsp;
+                        <button class="btn btn-primary btn-act" onclick="deleteData()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleDelete()">单步执行</button>
+                    </span>
+
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="drawing">
+                        <div id="draw"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="tableShow col-md-5">
+                    <table>
+                        <thead>
+                        <tr>
+                            <td>变量名</td>
+                            <td>变量值</td>
+                            <td>说明</td>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-7 showing">
+                    <div class="codeShow">
+                        <div id="createList">
+                            <h4>/*创建顺序表*/</h4>
+                            <p class="start1">PSeqList createNullList_seq(int m){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;PSeqList palist=(PSeqList)malloc(sizeof(struct SeqList));</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if (palist!=NULL){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;palist->element=(DataType *)malloc(sizeof(DataType)*m);</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (palist->element){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;palist->MAXNUM = m;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;palist->n = 0; <comment>/*空表长度为0*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return palist;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else free(palist);</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;printf("Out of space!!\n");<comment>/*存储分配失败*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;return NULL;</p>
+                            <p>}</p>
+                        </div>
+                        <div id="insertList">
+                            <h4>/*插入数据*/</h4>
+                            <h4>/* 在palist所指顺序表中下标为p的元素之前插入元素x */</h4>
+                            <p class="start2">int insertPre_seq(PSeqList palist, int p, DataType x){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;int q;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if (palist->n >= palist->MAXNUM){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("Overflow!\n");<comment>/*溢出*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="else1">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if (p&lt;0 || p>palist->n){<comment>/*不存在下标为p的元素*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("Not exist!\n");</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="loopStart else2">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;for (q=palist->n-1; q>=p; q--)<comment>/*插入位置及之后的元素均后移1*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;palist->element[q+1] = palist->element[q];</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;palist->element[p] = x;<comment>/*插入元素x*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;palist->n = palist->n + 1;<comment>/*元素个数加1*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;return 1;</p>
+                            <p>}</p>
+                        </div>
+                        <div id="deleteList">
+                            <h4>/*删除数据*/</h4>
+                            <h4>/* 在palist 所指顺序表中删除下标为p的元素 */</h4>
+                            <p class="start3">int deleteP_seq(PSeqList palist, int p){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;int q;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if (p&lt;0 || p>palist->n-1){<comment>/*不存在下标为p的元素*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("Not exist!\n");</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return 0;</p>
+                            <p class="loopStart2 else3">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;for (q=p; q&lt;palist->n-1; q++)<comment>/*被删除元素之后的元素均前移1*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;palist->element[q] = palist->element[q+1];</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;palist->n = palist->n - 1;<comment>/*元素个数减1*/</comment></p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;return 1;</p>
+                            <p>}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/svg.draggable.js"></script>
+<script src="../js/svg.connectable.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var autoC = false, autoI = false, autoD = false;
+    var exeC = false, exeI = false, exeD = false;
+    //顺序表中变量
+    var n = 0;//标记已经插入的元素个数
+    var palist = new Array();
+
+    var w = 1200;
+    var h = 300;
+    var draw = SVG("draw").size(w, h);
+
+    //用于绘图的参数
+    var startX = 100;
+    var startY = 10;
+    var rectWidth = 96;
+    var rectHeight = 60;
+    var drawTextArray = new Array();
+    var curMove = 0;
+
+    function jump(come, type, ob){
+        if(autoC || autoI || autoD || exeC || exeI || exeD){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+
+    /*从代码开始执行，根据代码的情况来进行动画的演示;其中参数i表示当前执行的操作的编号*/
+    function createList(){
+        if(exeC || autoC){
+            return;
+        }
+        autoC = true;
+        $("tbody").html("");
+        draw.clear();
+        hasCurHigh();
+
+        var $paras = $(".currentCode").children("p");
+        var next = $paras.first("p");
+        next.addClass("highlight");
+        var times = 0;
+        var timeMachine = setTimeout(function(){
+            if(times == 1){
+                for(var i = 0; i < 3; i++){
+                    drawRect(rectWidth, rectHeight, startX, startY + i * rectHeight);
+                }
+                drawText("MAXNUM", 20, startX + rectWidth * 0.5, rectHeight * 0.5);
+                drawText("n", 24, startX + rectWidth * 0.5, rectHeight * 1.5);
+                drawText("element", 22, startX + rectWidth * 0.5, rectHeight * 2.5);
+            }
+            if(times == 3){
+                for(var i = 0; i < 8; i++){
+                    drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY + 40);
+                }
+                drawText("……", 20, startX + rectWidth * 5.5, rectHeight * 0.5 + 40);
+            }
+            if(times < 8){
+                times++;
+                next.removeClass("highlight");
+                next = next.next("p");
+                next.addClass("highlight");
+                if($(".highlight").length > 0){
+                    $(".codeShow").scrollTop($(".highlight").position().top);
+                }
+                setTimeout(arguments.callee, 1000);
+            }
+            else{
+                alert("空顺序表创建完毕");
+                autoC = false;
+                clearTimeout(timeMachine);
+                return;
+            }
+        }, 1000);
+    }
+    function insertData(){
+        if(exeI || autoI){
+            return;
+        }
+        autoI = true;
+        $("tbody").html("");
+        draw.clear();
+        drawTextArray.length = 0;
+        var listData = $("#listData").val().split(',');
+        var insertOffset = $("#insertOffset").val();
+        var insertValue = $("#insertValue").val();
+
+        var length = listData.length;
+        var loopTime = length - insertOffset;
+        curMove = length - 1;
+
+        if(listData.length <= 0 || $("#listData").val() == ""){
+            autoI = false;
+            alert("请输入顺序表中元素");
+            return;
+        }
+        if(insertOffset.length <= 0 || insertOffset == ""){
+            autoI = false;
+            alert("请输入待插入的下标");
+            return;
+        }
+        if(insertValue.length <= 0 || insertValue == ""){
+            autoI = false;
+            alert("请输入待插入的元素");
+            return;
+        }
+        hasCurHigh();
+
+        var $paras = $(".currentCode").children("p");
+        var next = $paras.first("p");
+        next.addClass("highlight");
+        var times = 0;
+        var timeMachine = setTimeout(function(){
+            $("tbody").html("");
+            displayTable("palist->MAXNUM", 10, "顺序表最大长度");
+            displayTable("palist->n", listData.length, "顺序表长度");
+            displayTable("x", insertValue, "待插入元素");
+            displayTable("p", insertOffset, "待插入下标");
+            displayTable("palist->element", listData.join(','), "顺序表");
+            if(times == 0){
+                for(var i = 0; i < length + 1; i++){
+                    drawRect(rectWidth, rectHeight, startX + i * rectWidth, startY + 40);
+                    if(i < length) {
+                        drawTextArray[i] = drawText(listData[i], 24, startX + (i + 0.5) * rectWidth, rectHeight * 0.5 + 40);
+                    }
+                }
+            }
+            if(times == 2){
+                if(insertOffset > 10){
+                    autoI = false;
+                    alert("Overflow!\n");
+                    return;
+                }
+                times = 5;
+                next.removeClass("highlight");
+                next = $(".else1");
+                next.addClass("highlight");
+            }
+            if(times == 6){
+                if(insertOffset > length || insertOffset < 0){
+                    autoI = false;
+                    alert("Not exist!\n");
+                    return;
+                }
+                times = 8;
+                next.removeClass("highlight");
+                next = $(".else2");
+                next.addClass("highlight");
+            }
+
+            //真正的插入操作
+            if(times == 10){
+                if(loopTime > 0){
+                    drawTextArray[curMove].animate(500, ">", 500).dx(rectWidth);
+                    listData[curMove + 1] = listData[curMove];
+                    curMove--;
+                    loopTime--;
+                    times = 8;
+                    next.removeClass("highlight");
+                    next = $(".loopStart");
+                }
+            }
+            if(times == 11){
+                listData[insertOffset] = insertValue;
+                var insertDraw = drawText(insertValue, 24, startX + insertOffset * rectWidth + 48, startY + rectHeight);
+                insertDraw.animate(500, ">", 500).dy(-startY - 0.75 * rectHeight + 40);
+            }
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if(times < $paras.length){
+                times++;
+                if($(".highlight").length > 0){
+                    $(".codeShow").scrollTop($(".highlight").position().top);
+                }
+                setTimeout(arguments.callee, 1000);
+            }
+            else {
+                alert("元素插入完毕！");
+                autoI = false;
+                clearTimeout(timeMachine);
+                return;
+            }
+        }, 1000);
+    }
+    function deleteData(){
+        if(exeD || autoD){
+            return;
+        }
+        autoD = true;
+        $("tbody").html("");
+        draw.clear();
+        drawTextArray.length = 0;
+        var listData = $("#listData2").val().split(',');
+        var length = listData.length;
+        var deleteOffset = $("#deleteOffset").val();
+        var loopTime = length - deleteOffset;
+        curMove = parseInt(deleteOffset) + 1;
+        if(length <= 0 || $("#listData2").val() == ""){
+            autoD = false;
+            alert("请输入顺序表中元素");
+            return;
+        }
+        if(deleteOffset.length <= 0 || deleteOffset == ""){
+            autoD = false;
+            alert("请输入待删除的元素下标");
+            return;
+        }
+        var delFlag = false;
+        hasCurHigh();
+        var $paras = $(".currentCode").children("p");
+        var next = $paras.first("p");
+        next.addClass("highlight");
+        var times = 0;
+        setTimeout(function(){
+            $("tbody").html("");
+            displayTable("palist->MAXNUM", 10, "顺序表最大长度");
+            displayTable("palist->n", listData.length, "顺序表长度");
+            displayTable("p", deleteOffset, "待删除下标");
+            displayTable("palist->element", listData.join(','), "顺序表");
+            if(times == 0){
+                for(var i = 0; i < length; i++){
+                    drawRect(rectWidth, rectHeight, startX + i * rectWidth, startY + 40);
+                    drawTextArray[i] = drawText(listData[i], 24, startX + (i + 0.5) * rectWidth, rectHeight * 0.5 + 40);
+                }
+            }
+            if(times == 2){
+                if(deleteOffset >= length || deleteOffset < 0){
+                    autoD = false;
+                    alert("Not exist!\n");
+                    return;
+                }
+                times = 5;
+                next.removeClass("highlight");
+                next = $(".else3");
+                next.addClass("highlight");
+            }
+            if(times == 7){
+                if(loopTime > 0 && curMove < length){
+                    if(!delFlag) {
+                        drawTextArray[curMove - 1].text("");
+                        listData.splice(deleteOffset, 1);
+                        delFlag = true;
+                    }
+                    drawTextArray[curMove].animate(500, ">", 500).dx(-rectWidth);
+                    curMove++;
+                    loopTime--;
+                    times = 5;
+                    next.removeClass("highlight");
+                    next = $(".loopStart2");
+                }
+            }
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if(times < $paras.length){
+                times++;
+                if($(".highlight").length > 0){
+                    $(".codeShow").scrollTop($(".highlight").position().top);
+                }
+                setTimeout(arguments.callee, 1000);
+            }
+            else {
+                autoD = false;
+                alert("元素删除完毕！");
+                return;
+            }
+
+        }, 1000);
+    }
+
+    var $paras = $(".currentCode").children("p");
+    var next;
+    var time1 = 0;
+    function ready(){
+        draw.clear();
+        hasCurHigh();
+        drawTextArray.length = 0;
+        $("tbody").html("");
+    }
+
+    function singleCreate(){
+        if(autoC){
+            return;
+        }
+        time1++;console.log(time1);
+        //alert("第" + times + "次点击");
+        if(time1 == 1){
+            ready();
+            exeC = true;
+            next = $(".start1");
+            next.addClass("highlight");
+        }else if(time1 == 2){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            for(var i = 0; i < 3; i++){
+                drawRect(rectWidth, rectHeight, startX, startY + i * rectHeight);
+            }
+            drawText("MAXNUM", 20, startX + rectWidth * 0.5, rectHeight * 0.5);
+            drawText("n", 24, startX + rectWidth * 0.5, rectHeight * 1.5);
+            drawText("element", 22, startX + rectWidth * 0.5, rectHeight * 2.5);
+        }else if(time1 == 4){
+            for(var i = 0; i < 8; i++){
+                drawRect(rectWidth, rectHeight, startX + (2 + i) * rectWidth, startY + 40);
+            }
+            drawText("……", 20, startX + rectWidth * 5.5, rectHeight * 0.5 + 40);
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+        }else if(time1 == 9){
+            alert("创建空顺序表完成");
+            exeC = false;
+            time1 = 0;
+            return;
+        }else if(time1 < 9){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if($(".highlight").length > 0){
+                $(".codeShow").scrollTop($(".highlight").position().top);
+            }
+        }
+
+    }
+    var listData;
+    var insertOffset;
+    var insertValue;
+    var loopTime = 0;
+    var time2 = 0;
+    function singleInsert() {
+        if(autoI){
+            return;
+        }
+        time2++;
+        //alert("第" + times + "次点击");
+        if (time2 == 1) {
+            ready();
+            exeI = true;
+            next = $(".start2");
+            next.addClass("highlight");
+            drawTextArray.length = 0;
+            listData = $("#listData").val().split(',');
+            insertOffset = $("#insertOffset").val();
+            insertValue = $("#insertValue").val();
+            loopTime = listData.length - insertOffset;
+            curMove = listData.length - 1;
+
+            if(listData.length <= 0 || $("#listData").val() == ""){
+                autoI = false;
+                alert("请输入顺序表中元素");
+                return;
+            }
+            if(insertOffset.length <= 0 || insertOffset == ""){
+                autoI = false;
+                alert("请输入待插入的下标");
+                return;
+            }
+            if(insertValue.length <= 0 || insertValue == ""){
+                autoI = false;
+                alert("请输入待插入的元素");
+                return;
+            }
+            for(var i = 0; i < listData.length + 1; i++){
+                drawRect(rectWidth, rectHeight, startX + i * rectWidth, startY + 40);
+                if(i < listData.length) {
+                    drawTextArray[i] = drawText(listData[i], 24, startX + (i + 0.5) * rectWidth, rectHeight * 0.5 + 40);
+                }
+            }
+        }
+        else if(time2 == 4){
+            next.removeClass("highlight");
+            next = $(".else1");
+            next.addClass("highlight");
+            if(insertOffset > 10){
+                exeI = false;
+                time2 = 0;
+                alert("Overflow!\n");
+                return;
+            }
+        }else if(time2 == 6){
+            next.removeClass("highlight");
+            next = $(".else2");
+            next.addClass("highlight");
+            if(insertOffset > listData.length || insertOffset < 0){
+                exeI = false;
+                time2 = 0;
+                alert("Not exist!\n");
+                return;
+            }
+        }else if(time2 == 7){
+            next.removeClass("highlight");
+            next = $(".loopStart").next("p");
+            next.addClass("highlight");
+            if(loopTime <= 0){
+                time2 = 9;
+            }
+        }else  if(time2 == 8){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if(loopTime > 0) {
+                drawTextArray[curMove].animate(500, ">", 500).dx(rectWidth);
+                listData[curMove + 1] = listData[curMove];
+                curMove--;
+                loopTime--;
+                time2 = 6;
+            }
+        }else if(time2 == 10){
+            next.removeClass("highlight");
+            next = next.next("p").next("p");
+            next.addClass("highlight");
+            listData[insertOffset] = insertValue;
+            var insertDraw = drawText(insertValue, 24, startX + insertOffset * rectWidth + 48, startY + rectHeight);
+            insertDraw.animate(500, ">", 500).dy(-startY - 0.75 * rectHeight + 40);
+        }else if(time2 == 13){
+            alert("插入元素完成");
+            exeI = false;
+            time2 = 0;
+            return;
+        }else if(time2 < 13){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if($(".highlight").length > 0){
+                $(".codeShow").scrollTop($(".highlight").position().top);
+            }
+        }
+
+
+        $("tbody").html("");
+        displayTable("palist->MAXNUM", 10, "顺序表最大长度");
+        displayTable("palist->n", listData.length, "顺序表长度");
+        displayTable("x", insertValue, "待插入元素");
+        displayTable("p", insertOffset, "待插入下标");
+        displayTable("palist->element", listData.join(','), "顺序表");
+    }
+
+    var listData;
+    var deleteOffset;
+    var loopTime = 0;
+    var time3 = 0;
+    var delFlag1 = false;
+
+    function singleDelete(){
+        if(autoD){
+            return;
+        }
+        time3++;console.log(time3);
+        //alert("第" + time3 + "次点击");
+        if(time3 == 1){
+            ready();
+            exeD = true;
+            next = $(".start3");
+            next.addClass("highlight");
+            drawTextArray.length = 0;
+            listData = $("#listData2").val().split(',');
+            deleteOffset = $("#deleteOffset").val();
+            loopTime = listData.length - deleteOffset - 1;
+            curMove = parseInt(deleteOffset) + 1;
+
+            if(listData.length <= 0 || $("#listData2").val() == ""){
+                autoD = false;
+                time3 = 0;
+                alert("请输入顺序表中元素");
+                return;
+            }
+            if(deleteOffset.length <= 0 || deleteOffset == ""){
+                autoD = false;
+                time3 = 0;
+                alert("请输入待删除的元素下标");
+                return;
+            }
+            for(var i = 0; i < listData.length; i++){
+                drawRect(rectWidth, rectHeight, startX + i * rectWidth, startY + 40);
+                drawTextArray[i] = drawText(listData[i], 24, startX + (i + 0.5) * rectWidth, rectHeight * 0.5 + 40);
+            }
+        }else if(time3 == 4){
+            if(deleteOffset >= listData.length - 1 || deleteOffset < 0){
+                exeD = false;
+                time3 = 0;
+                alert("Not exist!\n");
+                return;
+            }
+            next.removeClass("highlight");
+            next = $(".else3");
+            next.addClass("highlight");
+        }else if(time3 == 5){
+            next.removeClass("highlight");
+            next = $(".loopStart2").next("p");
+            next.addClass("highlight");
+            if(loopTime <= 0){
+                time3 = 6;
+                next.removeClass("highlight");
+                next = next.next("p").next("p");
+                next.addClass("highlight");
+            }
+        }else if(time3 == 6){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if(loopTime > 0 && curMove <= listData.length){
+                if(!delFlag1) {
+                    drawTextArray[curMove - 1].text("");
+                    listData.splice(deleteOffset, 1);
+                    delFlag1 = true;//考虑一下只有一个元素的情况
+                    if(listData.length == 1){
+                        drawTextArray[0].text("");
+                    }
+                }
+                drawTextArray[curMove].animate(500, ">", 500).dx(-rectWidth);
+                curMove++;
+                loopTime--;
+                time3 = 4;
+            }
+        }else if(time3 == 8){
+            alert("删除元素成功");
+            exeD = false;
+            time3 = 0;
+            return;
+        }else if(time3 < 9) {
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            if($(".highlight").length > 0){
+                $(".codeShow").scrollTop($(".highlight").position().top);
+            }
+        }
+
+
+        $("tbody").html("");
+        displayTable("palist->MAXNUM", 10, "顺序表最大长度");
+        displayTable("palist->n", listData.length, "顺序表长度");
+        displayTable("p", deleteOffset, "待删除下标");
+        displayTable("palist->element", listData.join(','), "顺序表");
+    }
+</script>
+
+</body>
+</html>

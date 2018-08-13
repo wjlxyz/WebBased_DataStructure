@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Queue</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -216px;
+            display: none;
+        }
+        #inQueue, #outQueue{
+            display: none;
+        }
+        .codeShow{
+            line-height: 110%;
+        }
+        .tableShow{
+            margin-top: 20px;
+        }
+        input#inArray, input#outArray{
+            width: 200px;
+        }
+        input#inData, input#inFront, input#outFront{
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">队<br>列</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('in', 'Queue', this)">入<br>队<br>列</button>
+                <button type="button" class="btn btn-nav" onclick="jump('out', 'Queue', this)">出<br>队<br>列</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="in">
+                        <label class="exeHint">请输入队列中的元素</label>
+                        <input id="inArray" type="text" placeholder="最多8个元素,英文逗号隔开">
+                        <label class="exeHint">请输入front位置</label>
+                        <input id="inFront" type="number">
+                        <label class="exeHint">请输入待入队列的元素</label>&nbsp;
+                        <input id="inData" type="text">
+                        <button class="btn btn-primary btn-act" onclick="inQueue()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleIn()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="out">
+                        <label class="exeHint">请输入队列中的元素</label>
+                        <input id="outArray" type="text" placeholder="最多8个元素,英文逗号隔开">
+                        <label class="exeHint">请输入front位置</label>
+                        <input id="outFront" type="number">
+                        <button class="btn btn-primary btn-act" onclick="outQueue()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleOut()">单步执行</button>
+                    </span>
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 drawing">
+                    <div id="draw"></div>
+                </div>
+                <div class="col-md-6 showing">
+                    <div class="codeShow">
+                        <div id="inQueue">
+                            <h4>/*入队列*/</h4>
+                            <comment>/*在队尾插入元素*/</comment>
+                            <p class="p1">void enQueue_seq(PSeqQueue paqu, DataType x){ </p>
+                            <p class="p2">&nbsp;&nbsp;if((paqu->r+1)%MAXNUM == paqu->f)</p>
+                            <p class="p3">&nbsp;&nbsp;&nbsp;&nbsp;printf("Full queue.\n");</p>
+                            <p class="p4">&nbsp;&nbsp;else{</p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;paqu->q[paqu->r] = x;</p>
+                            <p class="p6">&nbsp;&nbsp;&nbsp;&nbsp;paqu->r = (paqu->r+1)%MAXNUM;</p>
+                            <p class="p7">&nbsp;&nbsp;}</p>
+                            <p class="p8">}</p>
+                        </div>
+                        <div id="outQueue">
+                            <h4>/*出队列*/</h4>
+                            <comment>/*删除队列头部元素*/</comment>
+                            <p class="q1">void deQueue_seq(PSeqQueue paqu){ </p>
+                            <p class="q2">&nbsp;&nbsp;if(paqu->f == paqu->r)</p>
+                            <p class="q3">&nbsp;&nbsp;&nbsp;&nbsp;printf("Empty Queue.\n");</p>
+                            <p class="q4">&nbsp;&nbsp;else</p>
+                            <p class="q5">&nbsp;&nbsp;&nbsp;&nbsp;paqu->f = (paqu->f+1)%MAXNUM;</p>
+                            <p class="q6">}</p>
+                        </div>
+
+                    </div>
+                    <div class="tableShow">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>变量名</th>
+                                <th>变量值</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var draw = SVG("draw").size(520, 560);
+    var autoIn = false, autoOut = false;
+    var exeIn = false, exeOut = false;
+
+    function jump(come, type, ob){
+        if(autoIn || autoOut || exeIn || exeOut){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+
+    //与绘图设置有关的变量
+    var startX = 250;
+    var startY = 460;
+    var rectWidth = 96;
+    var rectHeight = 60;
+    var drawTextArray = new Array();
+    var frontArrow, rearArrow;
+    var frontText, rearText;
+    var MAXNUM = 8;
+
+
+    var times = 0;
+    var timePara = 1;
+    var inArray, outArray;
+    var inData;
+    var inFront, outFront;
+    var positionR, positionF;
+    function singleIn(){
+        if(autoIn){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("p" + timePara);
+            inArray = $("#inArray").val().split(',');
+            inFront = $("#inFront").val();
+            inData = $("#inData").val();
+            if(inArray.length <= 0 || $("#inArray").val() == ""){
+                alert("请输入队列中元素!\n");
+                times = 0;
+                timePara = 1;
+                return;
+            }
+            if(inFront == ""){
+                alert("请输入队头位置!\n");
+                times = 0;
+                timePara = 1;
+                return;
+            }
+            inFront = parseInt(inFront) % MAXNUM;
+            if(inData == ""){
+                alert("请输入待插入元素!\n");
+                times = 0;
+                timePara = 1;
+                return;
+            }
+            exeIn = true;
+            draw.clear();
+            for(var i = 0; i < 8; i++){
+                drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+            }
+            for(var i = 0; i < MAXNUM; i++){
+                if(i < inArray.length){
+                    drawTextArray[i] = drawText(inArray[i], 24, startX + 0.5 * rectWidth, (MAXNUM - (i + inFront) % MAXNUM) * rectHeight);
+                }else {
+                    drawTextArray[i] = drawText("", 24, startX + 0.5 * rectWidth, (MAXNUM - (i + inFront) % MAXNUM) * rectHeight);
+                }
+
+            }
+            frontArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+            frontText = drawText("paqu->f", 24, 50, 485);
+            frontArrow.animate(500, ">", 500).dy(-inFront * rectHeight);
+            frontText.animate(500, ">", 500).dy(-inFront * rectHeight);
+
+            rearArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+            rearText = drawText("paqu->r", 24, 50, 485);
+            rearArrow.animate(500, ">", 500).dy((-inFront - inArray.length) % MAXNUM * rectHeight);
+            rearText.animate(500, ">", 500).dy((-inFront - inArray.length) % MAXNUM * rectHeight);
+            positionR = (-inFront - inArray.length) % MAXNUM;
+            timePara++;
+        }else if(times == 2){
+            high("p" + timePara);
+            if(inArray.length < MAXNUM){
+                times = 3;
+                timePara = 4;
+            }else{
+                timePara++;
+            }
+        }else if(times == 3){
+            high("p" + timePara);
+            alert("Full queue!\n");
+            times = 0;
+            timePara = 1
+            return;
+        }else if(times == 4){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 5){
+            high("p" + timePara);
+            drawTextArray[inArray.length].text(inData.toString());
+            inArray.push(inData);
+            timePara++;
+        }else if(times == 6){
+            high("p" + timePara);
+            if(-positionR < MAXNUM - 1){
+                rearArrow.animate(500, ">", 500).dy(-rectHeight);
+                rearText.animate(500, ">", 500).dy(-rectHeight);
+            }else{
+                rearArrow.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+                rearText.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+            }
+
+            timePara++;
+        }else if(times == 7){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 8){
+            high("p" + timePara);
+            exeIn = false;
+            times = 0;
+            timePara = 1;
+            drawTextArray.length = 0;
+            alert("入队列完成!\n");
+            return;
+        }
+        $("tbody").html("");
+        displayTable("MAXNUM", 8, "队列最大长度");
+        displayTable("n", inArray.length, "队列长度");
+        displayTable("paqu->f", inFront, "队列头");
+        displayTable("paqu->r", (inFront + inArray.length) % MAXNUM, "队列尾");
+        displayTable("x", inData, "待入队元素");
+        displayTable("paqu->q", inArray.join(','), "队列");
+    }
+    function inQueue(){
+        if(autoIn || exeIn){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("p" + timePara);
+                inArray = $("#inArray").val().split(',');
+                inFront = $("#inFront").val();
+                inData = $("#inData").val();
+                if(inArray.length <= 0 || $("#inArray").val() == ""){
+                    alert("请输入队列中元素!\n");
+                    times = 0;
+                    timePara = 1;
+                    return;
+                }
+                if(inFront == ""){
+                    alert("请输入队头位置!\n");
+                    times = 0;
+                    timePara = 1;
+                    return;
+                }
+                inFront = parseInt(inFront) % MAXNUM;
+                if(inData == ""){
+                    alert("请输入待插入元素!\n");
+                    times = 0;
+                    timePara = 1;
+                    return;
+                }
+                autoIn = true;
+                draw.clear();
+                for(var i = 0; i < 8; i++){
+                    drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                }
+                for(var i = 0; i < MAXNUM; i++){
+                    if(i < inArray.length){
+                        drawTextArray[i] = drawText(inArray[i], 24, startX + 0.5 * rectWidth, (MAXNUM - (i + inFront) % MAXNUM) * rectHeight);
+                    }else {
+                        drawTextArray[i] = drawText("", 24, startX + 0.5 * rectWidth, (MAXNUM - (i + inFront) % MAXNUM) * rectHeight);
+                    }
+
+                }
+                frontArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+                frontText = drawText("paqu->f", 24, 50, 485);
+                frontArrow.animate(500, ">", 500).dy(-inFront * rectHeight);
+                frontText.animate(500, ">", 500).dy(-inFront * rectHeight);
+
+                rearArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+                rearText = drawText("paqu->r", 24, 50, 485);
+                rearArrow.animate(500, ">", 500).dy((-inFront - inArray.length) % MAXNUM * rectHeight);
+                rearText.animate(500, ">", 500).dy((-inFront - inArray.length) % MAXNUM * rectHeight);
+                positionR = (-inFront - inArray.length) % MAXNUM;
+                timePara++;
+            }else if(times == 2){
+                high("p" + timePara);
+                if(inArray.length < MAXNUM){
+                    times = 3;
+                    timePara = 4;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 3){
+                high("p" + timePara);
+                alert("Full queue!\n");
+                times = 0;
+                timePara = 1
+                return;
+            }else if(times == 4){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 5){
+                high("p" + timePara);
+                drawTextArray[inArray.length].text(inData.toString());
+                inArray.push(inData);
+                timePara++;
+            }else if(times == 6){
+                high("p" + timePara);
+                if(-positionR < MAXNUM - 1){
+                    rearArrow.animate(500, ">", 500).dy(-rectHeight);
+                    rearText.animate(500, ">", 500).dy(-rectHeight);
+                }else{
+                    rearArrow.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+                    rearText.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+                }
+
+                timePara++;
+            }else if(times == 7){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 8){
+                high("p" + timePara);
+                autoIn = false;
+                times = 0;
+                timePara = 1;
+                drawTextArray.length = 0;
+                alert("入队列完成!\n");
+                return;
+            }
+            $("tbody").html("");
+            displayTable("MAXNUM", 8, "队列最大长度");
+            displayTable("n", inArray.length, "队列长度");
+            displayTable("paqu->f", inFront, "队列头");
+            displayTable("paqu->r", (inFront + inArray.length) % MAXNUM, "队列尾");
+            displayTable("x", inData, "待入队元素");
+            displayTable("paqu->q", inArray.join(','), "队列");
+            if(times < 8){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    function singleOut(){
+        if(autoOut){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("q" + timePara);
+            outArray = $("#outArray").val().split(',');
+            outFront = $("#outFront").val();
+            inData = $("#inData").val();
+            if(outArray.length <= 0 || $("#outArray").val() == ""){
+                alert("请输入队列中元素!\n");
+                times = 0;
+                timePara = 1;
+                return;
+            }
+            if(outFront == ""){
+                alert("请输入队头位置!\n");
+                times = 0;
+                timePara = 1;
+                return;
+            }
+            outFront = parseInt(outFront) % MAXNUM;
+            exeOut = true;
+            draw.clear();
+            for(var i = 0; i < 8; i++){
+                drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+            }
+            for(var i = 0; i < MAXNUM; i++){
+                if(i < outArray.length){
+                    drawTextArray[i] = drawText(outArray[i], 24, startX + 0.5 * rectWidth, (MAXNUM - (i + outFront) % MAXNUM) * rectHeight);
+                }else {
+                    drawTextArray[i] = drawText("", 24, startX + 0.5 * rectWidth, (MAXNUM - (i + outFront) % MAXNUM) * rectHeight);
+                }
+            }
+            frontArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+            frontText = drawText("paqu->f", 24, 50, 485);
+            frontArrow.animate(500, ">", 500).dy(-outFront * rectHeight);
+            frontText.animate(500, ">", 500).dy(-outFront * rectHeight);
+
+            rearArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+            rearText = drawText("paqu->r", 24, 50, 485);
+            rearArrow.animate(500, ">", 500).dy((-outFront - outArray.length) % MAXNUM * rectHeight);
+            rearText.animate(500, ">", 500).dy((-outFront - outArray.length) % MAXNUM * rectHeight);
+            positionF = (-outFront) % MAXNUM;
+            timePara++;
+        }else if(times == 2){
+            high("q" + timePara);
+            times = 3;
+            timePara = 4;
+        }else if(times == 4){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 5){
+            high("q" + timePara);
+            if(-positionF < MAXNUM - 1){
+                frontArrow.animate(500, ">", 500).dy(-rectHeight);
+                frontText.animate(500, ">", 500).dy(-rectHeight);
+            }else{
+                frontArrow.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+                frontText.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+            }
+            timePara++;
+        }else if(times == 6){
+            high("q" + timePara);
+            times = 0;
+            timePara = 1;
+            drawTextArray.length = 0;
+            exeOut = false;
+            alert("出队列完成!\n");
+            return;
+        }
+        $("tbody").html("");
+        displayTable("MAXNUM", 8, "队列最大长度");
+        displayTable("n", outArray.length, "队列长度");
+        displayTable("paqu->f", outFront, "队列头");
+        displayTable("paqu->r", (outFront + outArray.length) % MAXNUM, "队列尾");
+        displayTable("paqu->q", outArray.join(','), "队列");
+    }
+    function outQueue(){
+        if(autoOut || exeOut){
+            return;
+        }
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("q" + timePara);
+                outArray = $("#outArray").val().split(',');
+                outFront = $("#outFront").val();
+                inData = $("#inData").val();
+                if(outArray.length <= 0 || $("#outArray").val() == ""){
+                    alert("请输入队列中元素!\n");
+                    times = 0;
+                    timePara = 1;
+                    return;
+                }
+                if(outFront == ""){
+                    alert("请输入队头位置!\n");
+                    times = 0;
+                    timePara = 1;
+                    return;
+                }
+                outFront = parseInt(outFront) % MAXNUM;
+                autoOut = true;
+                draw.clear();
+                for(var i = 0; i < 8; i++){
+                    drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                }
+                for(var i = 0; i < MAXNUM; i++){
+                    if(i < outArray.length){
+                        drawTextArray[i] = drawText(outArray[i], 24, startX + 0.5 * rectWidth, (MAXNUM - (i + outFront) % MAXNUM) * rectHeight);
+                    }else {
+                        drawTextArray[i] = drawText("", 24, startX + 0.5 * rectWidth, (MAXNUM - (i + outFront) % MAXNUM) * rectHeight);
+                    }
+                }
+                frontArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+                frontText = drawText("paqu->f", 24, 50, 485);
+                frontArrow.animate(500, ">", 500).dy(-outFront * rectHeight);
+                frontText.animate(500, ">", 500).dy(-outFront * rectHeight);
+
+                rearArrow = draw.polygon("150,500 140,506 140,503 100,503 100,497 140,497 140,494").fill({color: "black"}).stroke({ width: 5 });
+                rearText = drawText("paqu->r", 24, 50, 485);
+                rearArrow.animate(500, ">", 500).dy((-outFront - outArray.length) % MAXNUM * rectHeight);
+                rearText.animate(500, ">", 500).dy((-outFront - outArray.length) % MAXNUM * rectHeight);
+                positionF = (-outFront) % MAXNUM;
+                timePara++;
+            }else if(times == 2){
+                high("q" + timePara);
+                times = 3;
+                timePara = 4;
+            }else if(times == 4){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 5){
+                high("q" + timePara);
+                if(-positionF < MAXNUM - 1){
+                    frontArrow.animate(500, ">", 500).dy(-rectHeight);
+                    frontText.animate(500, ">", 500).dy(-rectHeight);
+                }else{
+                    frontArrow.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+                    frontText.animate(500, ">", 500).dy((MAXNUM - 1) * rectHeight);
+                }
+                timePara++;
+            }else if(times == 6){
+                high("q" + timePara);
+                times = 0;
+                timePara = 1;
+                drawTextArray.length = 0;
+                autoOut = false;
+                alert("出队列完成!\n");
+                return;
+            }
+            $("tbody").html("");
+            displayTable("MAXNUM", 8, "队列最大长度");
+            displayTable("n", outArray.length, "队列长度");
+            displayTable("paqu->f", outFront, "队列头");
+            displayTable("paqu->r", (outFront + outArray.length) % MAXNUM, "队列尾");
+            displayTable("paqu->q", outArray.join(','), "队列");
+            if(times < 6){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+</script>
+</body>
+</html>

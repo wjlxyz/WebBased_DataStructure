@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Binarytree</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -238px;
+            display: none;
+        }
+        .codeShow{
+            line-height: 120%;
+            height: 320px;
+        }
+        .tableShow{
+            margin-top: 40px;
+        }
+        #preBT, #midBT, #postBT{
+            display: none;
+        }
+        #postBT{
+            width: 100%;
+            margin-right: -20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">二<br>叉<br>树</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+                </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('pre', 'BT', this)">先<br>序<br>遍<br>历</button>
+                <button type="button" class="btn btn-nav" onclick="jump('mid', 'BT', this)">中<br>序<br>遍<br>历</button>
+                <button type="button" class="btn btn-nav" onclick="jump('post', 'BT', this)">后<br>序<br>遍<br>历</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="pre">
+                        <button class="btn btn-primary btn-act" onclick="preOrder()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singlePre()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="mid">
+                        <button class="btn btn-primary btn-act" onclick="midOrder()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleMid()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="post">
+                        <button class="btn btn-primary btn-act" onclick="postOrder()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singlePost()">单步执行</button>
+                    </span>
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 drawing">
+                    <div id="draw"></div>
+                </div>
+                <div class="col-md-6 showing">
+                    <div class="codeShow">
+                        <div id="preBT">
+                            <h4>/*先序遍历*/</h4>
+                            <p class="p1">void nPreOrde(BinTree t){<comment>/*先根周游二叉树*/</comment></p>
+                            <p class="p2">&nbsp;&nbsp;&nbsp;&nbsp;Stack s;<comment>/*栈元素的类型是BinTree*/</comment></p>
+                            <p class="p3">&nbsp;&nbsp;&nbsp;&nbsp;BinTreeNode *c;</p>
+                            <p class="p4">&nbsp;&nbsp;&nbsp;&nbsp;if (t == NULL)</p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</p>
+                            <p class="p6">&nbsp;&nbsp;&nbsp;&nbsp;s=createEmptyStack();</p>
+                            <p class="p7">&nbsp;&nbsp;&nbsp;&nbsp;push(s,t);</p>
+                            <p class="p8">&nbsp;&nbsp;&nbsp;&nbsp;while(!isEmptyStack(s)){<comment>/*每当栈不空*/</comment></p>
+                            <p class="p9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c=top(s);<comment>/*取栈顶*/</comment></p>
+                            <p class="p10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pop(s);<comment>/*出栈*/</comment></p>
+                            <p class="p11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(c!=NULL){</p>
+                            <p class="p12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visit(root(t));<comment>/*访问*/</comment></p>
+                            <p class="p13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push(s,rightChild(c));<comment>/*右子树进栈*/</comment></p>
+                            <p class="p14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push(s,leftChild(c));<comment>/*左子树进栈*/</comment></p>
+                            <p class="p15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="p16">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="p17">}</p>
+                        </div>
+                        <div id="midBT">
+                            <h4>/*中序遍历*/</h4>
+                            <p class="q1">void nInOrder(BinTree t){</p>
+                            <p class="q2">&nbsp;&nbsp;&nbsp;&nbsp;Stack s = createEmptyStack();<comment>/*栈元素的类型是BinTree*/</comment></p>
+                            <p class="q3">&nbsp;&nbsp;&nbsp;&nbsp;BinTree c = t;</p>
+                            <p class="q4">&nbsp;&nbsp;&nbsp;&nbsp;if (c == NULL)</p>
+                            <p class="q5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</p>
+                            <p class="q6">&nbsp;&nbsp;&nbsp;&nbsp;do{</p>
+                            <p class="q7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(c!=NULL){</p>
+                            <p class="q8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push(s,c);</p>
+                            <p class="q9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c=leftChild(c);</p>
+                            <p class="q10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="q11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c=top(s);</p>
+                            <p class="q12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pop(s);</p>
+                            <p class="q13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;visit(root(c));</p>
+                            <p class="q14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c=rightChild(c);</p>
+                            <p class="q15">&nbsp;&nbsp;&nbsp;&nbsp;}while(c!=NULL || !isEmptyStack(s));</p>
+                            <p class="q16">}</p>
+                        </div>
+                        <div id="postBT">
+                            <h4>/*后序遍历*/</h4>
+                            <p class="w1">void nPostOrder1(BinTree t){</p>
+                            <p class="w2">&nbsp;&nbsp;&nbsp;&nbsp;Stack s;<comment>/*栈中元素为Elem类型*/</comment></p>
+                            <p class="w3">&nbsp;&nbsp;&nbsp;&nbsp;Elem stnode;</p>
+                            <p class="w4">&nbsp;&nbsp;&nbsp;&nbsp;BinTreeNode *p = t;<comment>/*周游时当前要处理的二叉树*/</comment></p>
+                            <p class="w5">&nbsp;&nbsp;&nbsp;&nbsp;if(t==NULL) return;</p>
+                            <p class="w6">&nbsp;&nbsp;&nbsp;&nbsp;s=createEmptyStack();<comment>/*创建空栈*/</comment></p>
+                            <p class="w7">&nbsp;&nbsp;&nbsp;&nbsp;do{<comment>/*每执行一次大循环进入一刻二叉树去周游*/</comment></p>
+                            <comment>&nbsp;&nbsp;&nbsp;&nbsp;/*反复地把遇到的二叉树进栈并进入它的左子树*/</comment>
+                            <p class="w8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(p!=NULL){</p>
+                            <p class="w9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stnode.t=p; stnode.tag=1;<comment>/*第一次进栈*/</comment></p>
+                            <p class="w10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push(s,stnode); p=leftChild(p);</p>
+                            <p class="w11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="w12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(!isEmptyStack(s)){</p>
+                            <p class="w13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stnode=top(s); pop(s);<comment>/*退栈*/</comment></p>
+                            <p class="w14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p=stnode.t;</p>
+                            <p class="w15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(stnode.tag==1){<comment>/*如果从左子树回来*/</comment></p>
+                            <comment>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*改标志重新进栈*/</comment>
+                            <p class="w16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stnode.tag=2; push(s,stnode);</p>
+                            <p class="w17">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;p=rightChild(p); break;<comment>/*停止退栈*/</comment></p>
+                            <p class="w18">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="w19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else visit(root(p));</p>
+                            <p class="w20">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="w21">&nbsp;&nbsp;&nbsp;&nbsp;}while(!isEmptyStack(s));<comment>/*栈为空时，全部周游完*/</comment></p>
+                            <p class="w22">}</p>
+                        </div>
+                    </div>
+                    <div class="tableShow">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>变量名</th>
+                                <th>变量值</th>
+                                <th>说明</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var autoPre = false, autoMid = false, autoPost = false;
+    var exePre = false, exeMid = false, exePost = false;
+
+    var draw = SVG("draw").size(520, 500);
+    function jump(come, type, ob){
+        if(autoPre || autoMid || autoPost || exePre || exeMid || exePost){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+    var startX = 225;
+    var startY = 20;
+    var diameter = 50;
+    var nodeNum = 0;
+
+    function getLine(fromX, fromY, toX, toY){
+        draw.line(fromX, fromY, toX, toY).stroke({width: 2});
+    }
+    function getCircle(moveX, moveY){
+        draw.circle(diameter).move(moveX, moveY)
+                .attr({
+                    fill: "lightblue",
+                    "fill-opacity": 0.5,
+                    stroke: "black",
+                    "stroke-width": 6
+                }).attr('class', 'v' + (nodeNum++));
+    }
+    function paintTree(){
+        getCircle(startX, startY);
+        drawText("0", 24, startX + 0.5 * diameter, startY + 0.25 * diameter);
+        getCircle(startX - 100, startY + 150);
+        drawText("1", 24, startX - 1.5 * diameter, startY + 3.25 * diameter);
+        getCircle(startX + 100, startY + 150);
+        drawText("2", 24, startX + 2.5 * diameter, startY + 3.25 * diameter);
+        getCircle(startX - 200, startY + 300);
+        drawText("3", 24, startX - 3.5 * diameter, startY + 6.25 * diameter);
+        getCircle(startX, startY + 300);
+        drawText("4", 24, startX + 0.5 * diameter, startY + 6.25 * diameter);
+        getCircle(startX + 200, startY + 300);
+        drawText("5", 24, startX + 4.5 * diameter, startY + 6.25 * diameter);
+        getLine(230, 60, 160, 170);
+        getLine(130, 210, 60, 320);
+        getLine(270, 60, 340, 170);
+        getLine(360, 220, 430, 330);
+        getLine(160, 220, 230, 330);
+    }
+    function visit(preNodeClass, curNodeClass, visitNum){
+        var $preNodeClass = $("." + preNodeClass);
+        var $curNodeClass = $("." + curNodeClass);
+        if($preNodeClass.length > 0){
+            $preNodeClass.css("stroke", "black");
+        }
+        if($curNodeClass.length > 0){
+            if(visitNum == 0)
+                $curNodeClass.css("fill", "yellow").css("stroke", "red");
+            else
+                $curNodeClass.css("stroke", "red");
+        }
+    }
+    function Node(mark, value, left, right){
+        this.mark = mark;
+        this.value = value;
+        this.left = left;
+        this.right = right;
+    }
+    var tree = new Array();
+    function initTree(){
+        tree[0] = new Node(0, "v0", 1, 2);
+        tree[1] = new Node(0, "v1", 3, 4);
+        tree[2] = new Node(0, "v2", null, 5);
+        tree[3] = new Node(0, "v3", null, null);
+        tree[4] = new Node(0, "v4", null, null);
+        tree[5] = new Node(0, "v5", null, null);
+        for(var i = 0; i < 6; i++){
+            if(tree[i].left != null){
+                tree[i].left = tree[tree[i].left];
+            }
+            if(tree[i].right != null){
+                tree[i].right = tree[tree[i].right];
+            }
+        }
+    }
+
+    var times = 0;
+    var timePara = 1;
+    var curNode = new Node();
+    var tmpNode = new Node();
+    var nodeArray = new Array();
+    var visitSeq = new Array();
+    var nodeStack = new Array;
+    function singlePre(){
+        if(autoPre){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("p" + timePara);
+            exePre = true;
+            initTree();
+            //画图
+            draw.clear();
+            paintTree();
+            nodeNum = 0;
+            curNode = tree[0];
+            visit(curNode.value, curNode.value, 0);
+            timePara++;
+        }else if(times == 2){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 3){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 4){
+            high("p" + timePara);
+            if(tree[0] == null){
+                timePara++;
+            }else{
+                times = 5;
+                timePara = 6;
+            }
+        }else if(times == 5){
+            high("p" + timePara);
+            exePre = false;
+            curNode = new Node();
+            tmpNode = new Node();
+            alert("当前二叉树为空!\n");
+            return;
+        }else if(times == 6){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 7){
+            high("p" + timePara);
+            nodeArray.push(tree[0]);
+            nodeStack.push(tree[0].value)
+            timePara++;
+        }else if(times == 8){
+            high("p" + timePara);
+            if(nodeArray.length <= 0 || nodeArray[0] == null){
+                times = 16;
+                timePara = 17
+            }else{
+                timePara++;
+            }
+        }else if(times == 9){
+            high("p" + timePara);
+            if(curNode != null){
+                tmpNode = curNode;
+            }
+            curNode = nodeArray.pop();
+            timePara++;
+        }else if(times == 10){
+            high("p" + timePara);
+            timePara++;
+            nodeStack.pop();
+        }else if(times == 11){
+            high("p" + timePara);
+            if(curNode == null){
+                times = 15;
+                timePara = 16;
+            }else{
+                timePara++;
+            }
+        }else if(times == 12){
+            high("p" + timePara);
+            curNode.mark = 1;
+            visit(tmpNode.value, curNode.value, 0);
+            visitSeq.push(curNode.value);
+            timePara++;
+        }else if(times == 13){
+            high("p" + timePara);
+            if(curNode.right != null){
+                nodeStack.push(curNode.right.value);
+                nodeArray.push(curNode.right);
+            }
+            timePara++;
+        }else if(times == 14){
+            high("p" + timePara);
+            if(curNode.left != null){
+                nodeStack.push(curNode.left.value);
+                nodeArray.push(curNode.left);
+            }
+            timePara++;
+        }else if(times == 15){
+            high("p" + timePara);
+            timePara++;
+        }else if(times == 16){
+            high("p" + timePara);
+            times = 7;
+            timePara = 8;
+        }else if(times == 17){
+            high("p" + timePara);
+            nodeArray.length = 0;
+            visitSeq.length = 0;
+            nodeStack.length = 0;
+            times = 0;
+            timePara = 1;
+            exePre = false;
+            curNode = new Node();
+            tmpNode = new Node();
+            alert("非递归先序周游完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("t", curNode != null ? curNode.value : "", "当前访问节点");
+        displayTable("当前遍历结果", visitSeq.join(','), "");
+        displayTable("s", nodeStack.join(','), "栈中节点");
+    }
+    function preOrder(){
+        if(autoPre || exePre){
+            return;
+        }
+        autoPre = true;
+        draw.clear();
+        paintTree();
+        initTree();
+        nodeNum = 0;
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("p" + timePara);
+                curNode = tree[0];
+                visit(curNode.value, curNode.value, 0);
+                timePara++;
+            }else if(times == 2){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 3){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 4){
+                high("p" + timePara);
+                if(tree[0] == null){
+                    timePara++;
+                }else{
+                    times = 5;
+                    timePara = 6;
+                }
+            }else if(times == 5){
+                high("p" + timePara);
+                autoPre = false;
+                alert("当前二叉树为空!\n");
+                return;
+            }else if(times == 6){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 7){
+                high("p" + timePara);
+                nodeArray.push(tree[0]);
+                nodeStack.push(tree[0].value);
+                timePara++;
+            }else if(times == 8){
+                high("p" + timePara);
+                if(nodeArray.length <= 0 || nodeArray[0] == null){
+                    times = 16;
+                    timePara = 17
+                }else{
+                    timePara++;
+                }
+            }else if(times == 9){
+                high("p" + timePara);
+                if(curNode != null){
+                    tmpNode = curNode;
+                }
+                curNode = nodeArray.pop();
+                timePara++;
+            }else if(times == 10){
+                high("p" + timePara);
+                timePara++;
+                nodeStack.pop();
+            }else if(times == 11){
+                high("p" + timePara);
+                if(curNode == null){
+                    times = 15;
+                    timePara = 16;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 12){
+                high("p" + timePara);
+                curNode.mark = 1;
+                visit(tmpNode.value, curNode.value, 0);
+                visitSeq.push(curNode.value);
+                timePara++;
+            }else if(times == 13){
+                high("p" + timePara);
+                if(curNode.right != null){
+                    nodeStack.push(curNode.right.value);
+                    nodeArray.push(curNode.right);
+                }
+                timePara++;
+            }else if(times == 14){
+                high("p" + timePara);
+                if(curNode.left != null){
+                    nodeStack.push(curNode.left.value);
+                    nodeArray.push(curNode.left);
+                }
+                timePara++;
+            }else if(times == 15){
+                high("p" + timePara);
+                timePara++;
+            }else if(times == 16){
+                high("p" + timePara);
+                times = 7;
+                timePara = 8;
+            }else if(times == 17){
+                high("p" + timePara);
+                nodeArray.length = 0;
+                visitSeq.length = 0;
+                nodeStack.length = 0;
+                times = 0;
+                timePara = 1;
+                autoPre = false;
+                alert("非递归先序周游完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("t", curNode != null ? curNode.value : "", "当前访问节点");
+            displayTable("当前遍历结果", visitSeq.join(','), "");
+            displayTable("s", nodeStack.join(','), "栈中节点");
+            if(times < 17){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    function singleMid(){
+        if(autoMid){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("q" + timePara);
+            exeMid = true;
+            initTree();
+            draw.clear();
+            paintTree();
+            nodeNum = 0;
+            curNode = tree[0];
+            tmpNode = curNode;
+            visit(curNode.value, curNode.value, 0);
+            timePara++;
+        }else if(times == 2){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 3){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 4){
+            high("q" + timePara);
+            if(tree[0] == null){
+                timePara++;
+            }else{
+                times = 5;
+                timePara = 6;
+            }
+        }else if(times == 5){
+            high("q" + timePara);
+            exeMid = false;
+            alert("当前二叉树为空!\n");
+            return;
+        }else if(times == 6){
+            high("q" + timePara);
+            timePara++;
+        }else if(times == 7){
+            high("q" + timePara);
+            if(curNode == null){
+                times = 10;
+                timePara = 11;
+            }else{
+                timePara++;
+            }
+        }else if(times == 8){
+            high("q" + timePara);
+            nodeArray.push(curNode);
+            nodeStack.push(curNode.value);
+            timePara++;
+        }else if(times == 9){
+            high("q" + timePara);
+            curNode = curNode.left;
+            timePara++;
+        }else if(times == 10){
+            high("q" + timePara);
+            times = 6;
+            timePara = 7;
+        }else if(times == 11){
+            high("q" + timePara);
+            curNode = nodeArray.pop();
+            timePara++;
+        }else if(times == 12){
+            high("q" + timePara);
+            nodeStack.pop();
+            timePara++;
+        }else if(times == 13){
+            high("q" + timePara);
+            curNode.mark = 1;
+            visit(tmpNode.value, curNode.value, 0);
+            tmpNode = curNode;
+            visitSeq.push(curNode.value);
+            timePara++;
+        }else if(times == 14){
+            high("q" + timePara);
+            curNode = curNode.right;
+            timePara++;
+        }else if(times == 15){
+            high("q" + timePara);
+            if(curNode == null && nodeArray.length <= 0){
+                timePara++;
+            }else {
+                times = 5;
+                timePara = 6;
+            }
+        }else if(times == 16){
+            high("q" + timePara);
+            nodeArray.length = 0;
+            visitSeq.length = 0;
+            nodeStack.length = 0;
+            times = 0;
+            timePara = 1;
+            exeMid = false;
+            curNode = new Node();
+            tmpNode = new Node();
+            alert("非递归中序周游完成!\n");
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("t", curNode != null ? curNode.value : "", "当前访问节点");
+        displayTable("当前遍历结果", visitSeq.join(','), "");
+        displayTable("s", nodeStack.join(','), "栈中节点");
+
+    }
+    function midOrder(){
+        if(autoMid || exeMid){
+            return;
+        }
+        autoMid = true;
+        draw.clear();
+        paintTree();
+        initTree();
+        nodeNum = 0;
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("q" + timePara);
+                autoMid = true;
+                initTree();
+                draw.clear();
+                paintTree();
+                nodeNum = 0;
+                curNode = tree[0];
+                tmpNode = curNode;
+                visit(curNode.value, curNode.value, 0);
+                timePara++;
+            }else if(times == 2){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 3){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 4){
+                high("q" + timePara);
+                if(tree[0] == null){
+                    timePara++;
+                }else{
+                    times = 5;
+                    timePara = 6;
+                }
+            }else if(times == 5){
+                high("q" + timePara);
+                autoMid = false;
+                alert("当前二叉树为空!\n");
+                return;
+            }else if(times == 6){
+                high("q" + timePara);
+                timePara++;
+            }else if(times == 7){
+                high("q" + timePara);
+                if(curNode == null){
+                    times = 10;
+                    timePara = 11;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 8){
+                high("q" + timePara);
+                nodeArray.push(curNode);
+                nodeStack.push(curNode.value);
+                timePara++;
+            }else if(times == 9){
+                high("q" + timePara);
+                curNode = curNode.left;
+                timePara++;
+            }else if(times == 10){
+                high("q" + timePara);
+                times = 6;
+                timePara = 7;
+            }else if(times == 11){
+                high("q" + timePara);
+                curNode = nodeArray.pop();
+                timePara++;
+            }else if(times == 12){
+                high("q" + timePara);
+                nodeStack.pop();
+                timePara++;
+            }else if(times == 13){
+                high("q" + timePara);
+                curNode.mark = 1;
+                visit(tmpNode.value, curNode.value, 0);
+                tmpNode = curNode;
+                visitSeq.push(curNode.value);
+                timePara++;
+            }else if(times == 14){
+                high("q" + timePara);
+                curNode = curNode.right;
+                timePara++;
+            }else if(times == 15){
+                high("q" + timePara);
+                if(curNode == null && nodeArray.length <= 0){
+                    timePara++;
+                }else {
+                    times = 5;
+                    timePara = 6;
+                }
+            }else if(times == 16){
+                high("q" + timePara);
+                nodeArray.length = 0;
+                visitSeq.length = 0;
+                nodeStack.length = 0;
+                times = 0;
+                timePara = 1;
+                autoMid = false;
+                curNode = new Node();
+                tmpNode = new Node();
+                alert("非递归中序周游完成!\n");
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("t", curNode != null ? curNode.value : "", "当前访问节点");
+            displayTable("当前遍历结果", visitSeq.join(','), "");
+            displayTable("s", nodeStack.join(','), "栈中节点");
+            if(times < 16){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+    var stnode = new Node();
+    function singlePost(){
+        if(autoPost){
+            return;
+        }
+        times++;
+        if(times == 1){
+            high("w" + timePara);
+            exePost = true;
+            initTree();
+            draw.clear();
+            paintTree();
+            nodeNum = 0;
+            curNode = tree[0];
+            tmpNode = curNode;
+            visit(curNode.value, curNode.value, 1);
+            timePara++;
+        }else if(times > 1 && times <= 7){
+            high("w" + timePara);
+            timePara++;
+        }else if(times == 8){
+            high("w" + timePara);
+            if(curNode == null){
+                times = 11;
+                timePara = 12;
+            }else{
+                timePara++;
+            }
+        }else if(times == 9){//stnode.t=p; stnode.tag=1;
+            high("w" + timePara);
+            stnode = curNode;
+            stnode.mark = 1;
+            timePara++;
+        }else if(times == 10){
+            high("w" + timePara);
+            nodeArray.push(stnode);
+            nodeStack.push(stnode.value);
+            curNode = curNode.left;
+            timePara++;
+        }else if(times == 11){
+            high("w" + timePara);
+            times = 7;
+            timePara = 8;
+        }else if(times == 12){
+            high("w" + timePara);
+            if(nodeArray.length <= 0){
+                times = 20;
+                timePara = 21;
+            }else{
+                timePara++;
+            }
+        }else if(times == 13){
+            high("w" + timePara);
+            stnode = nodeArray.pop();
+            nodeStack.pop();
+            timePara++;
+        }else if(times == 14){
+            high("w" + timePara);
+            if(curNode != null){
+                tmpNode = curNode;
+            }
+            curNode = stnode;
+            timePara++;
+        }else if(times == 15){
+            high("w" + timePara);
+            if(stnode.mark == 1){
+                timePara++;
+            }else{
+                times = 18;
+                timePara = 19;
+            }
+        }else if(times == 16){
+            high("w" + timePara);
+            stnode.mark = 2;
+            nodeArray.push(stnode);
+            nodeStack.push(stnode.value);
+            timePara++;
+        }else if(times == 17){
+            high("w" + timePara);
+            curNode = curNode.right;
+            timePara++;
+        }else if(times == 18){
+            high("w" + timePara);
+            times = 20;
+            timePara = 21;
+        }else if(times == 19){
+            high("w" + timePara);
+            visit(tmpNode.value, curNode.value, 0);
+            tmpNode = curNode;
+            visitSeq.push(curNode.value);
+            timePara++;
+        }else if(times == 20){
+            high("w" + timePara);
+            times = 11;
+            timePara = 12;
+        }else if(times == 21){
+            high("w" + timePara);
+            if(nodeArray.length <= 0){
+                timePara++;
+            }else{
+                times = 6;
+                timePara = 7;
+            }
+        }else if(times == 22){
+            high("w" + timePara);
+            nodeArray.length = 0;
+            visitSeq.length = 0;
+            nodeStack.length = 0;
+            times = 0;
+            timePara = 1;
+            exePost = false;
+            curNode = new Node();
+            tmpNode = new Node();
+            stnode = new Node();
+            alert("非递归后序周游完成!\n")
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("t", curNode != null ? curNode.value : "", "当前访问节点");
+        displayTable("当前遍历结果", visitSeq.join(','), "");
+        displayTable("s", nodeStack.join(','), "栈中节点");
+    }
+    function postOrder(){
+        if(autoPost || exePost){
+            return;
+        }
+        autoPost = true;
+        setTimeout(function(){
+            times++;
+            if(times == 1){
+                high("w" + timePara);
+                initTree();
+                draw.clear();
+                paintTree();
+                nodeNum = 0;
+                curNode = tree[0];
+                tmpNode = curNode;
+                visit(curNode.value, curNode.value, 1);
+                timePara++;
+            }else if(times > 1 && times <= 7){
+                high("w" + timePara);
+                timePara++;
+            }else if(times == 8){
+                high("w" + timePara);
+                if(curNode == null){
+                    times = 11;
+                    timePara = 12;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 9){//stnode.t=p; stnode.tag=1;
+                high("w" + timePara);
+                stnode = curNode;
+                stnode.mark = 1;
+                timePara++;
+            }else if(times == 10){
+                high("w" + timePara);
+                nodeArray.push(stnode);
+                nodeStack.push(stnode.value);
+                curNode = curNode.left;
+                timePara++;
+            }else if(times == 11){
+                high("w" + timePara);
+                times = 7;
+                timePara = 8;
+            }else if(times == 12){
+                high("w" + timePara);
+                if(nodeArray.length <= 0){
+                    times = 20;
+                    timePara = 21;
+                }else{
+                    timePara++;
+                }
+            }else if(times == 13){
+                high("w" + timePara);
+                stnode = nodeArray.pop();
+                nodeStack.pop();
+                timePara++;
+            }else if(times == 14){
+                high("w" + timePara);
+                if(curNode != null){
+                    tmpNode = curNode;
+                }
+                curNode = stnode;
+                timePara++;
+            }else if(times == 15){
+                high("w" + timePara);
+                if(stnode.mark == 1){
+                    timePara++;
+                }else{
+                    times = 18;
+                    timePara = 19;
+                }
+            }else if(times == 16){
+                high("w" + timePara);
+                stnode.mark = 2;
+                nodeArray.push(stnode);
+                nodeStack.push(stnode.value);
+                timePara++;
+            }else if(times == 17){
+                high("w" + timePara);
+                curNode = curNode.right;
+                timePara++;
+            }else if(times == 18){
+                high("w" + timePara);
+                times = 20;
+                timePara = 21;
+            }else if(times == 19){
+                high("w" + timePara);
+                visit(tmpNode.value, curNode.value, 0);
+                tmpNode = curNode;
+                visitSeq.push(curNode.value);
+                timePara++;
+            }else if(times == 20){
+                high("w" + timePara);
+                times = 11;
+                timePara = 12;
+            }else if(times == 21){
+                high("w" + timePara);
+                if(nodeArray.length <= 0){
+                    timePara++;
+                }else{
+                    times = 6;
+                    timePara = 7;
+                }
+            }else if(times == 22){
+                high("w" + timePara);
+                nodeArray.length = 0;
+                visitSeq.length = 0;
+                nodeStack.length = 0;
+                times = 0;
+                timePara = 1;
+                autoPost = false;
+                curNode = new Node();
+                tmpNode = new Node();
+                stnode = new Node();
+                alert("非递归后序周游完成!\n")
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("t", curNode != null ? curNode.value : "", "当前访问节点");
+            displayTable("当前遍历结果", visitSeq.join(','), "");
+            displayTable("s", nodeStack.join(','), "栈中节点");
+            if(times < 22){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+
+</script>
+</body>
+</html>

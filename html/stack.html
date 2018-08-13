@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stack</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        .nav2{
+            margin-top: -194px;
+            display: none;
+        }
+        #inStack, #outStack, #topStack{
+            display: none;
+        }
+        .codeShow{
+            line-height: 110%;
+        }
+        .tableShow{
+            margin-top: 20px;
+        }
+        input#stackData1, input#stackData2, input#stackData3{
+            width: 200px;
+        }
+        input#inData1{
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button type="button" class="btn btn-nav" onclick="navButton(this)">栈</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button type="button" class="btn btn-nav" onclick="jump('in', 'Stack', this)">入<br>栈</button>
+                <button type="button" class="btn btn-nav" onclick="jump('out', 'Stack', this)">出<br>栈</button>
+                <button type="button" class="btn btn-nav" onclick="jump('top', 'Stack', this)">求<br>栈<br>顶</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="in">
+                        <label class="exeHint">请输入栈中元素</label>
+                        <input id="stackData1" placeholder="最多8个元素，英文逗号隔开" type="text">
+                        <label class="exeHint">请输入待入栈的元素</label>&nbsp;
+                        <input id="inData1" type="text">
+                        <button class="btn btn-primary btn-act" onclick="inStack()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleIn()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="out">
+                        <label class="exeHint">请输入栈中元素</label>
+                        <input id="stackData2" placeholder="最多8个元素，英文逗号隔开" type="text">
+                        <button class="btn btn-primary btn-act" onclick="outStack()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleOut()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="top">
+                        <label class="exeHint">请输入栈中元素</label>
+                        <input id="stackData3" placeholder="最多8个元素，英文逗号隔开" type="text">
+                        <button class="btn btn-primary btn-act" onclick="topStack()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleTop()">单步执行</button>
+                    </span>
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6 drawing">
+                    <div id="draw"></div>
+                </div>
+                <div class="col-md-6 showing">
+                    <div class="codeShow">
+                        <div id="inStack">
+                            <h4>/*入栈*/</h4>
+                            <comment>/*在栈中插入一个元素*/</comment>
+                            <p class="start1">void push_seq(PSeqStack pastack, DataType x){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if(pastack->t >= MAXNUM-1)</p>
+                            <p class="else-in">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("Overflow!\n");</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;else{</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pastack->t = pastack->t + 1;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pastack->s[pastack->t] = x;</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p>}</p>
+                        </div>
+                        <div id="outStack">
+                            <h4>/*出栈*/</h4>
+                            <comment>/*删除栈顶元素*/</comment>
+                            <p class="start2">void pop_seq(PSeqStack pastack){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if(pastack->t == -1)</p>
+                            <p class="else-out">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("Underflow!\n");</p>
+                            <p>&nbsp;&nbsp;else</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pastack->t = pastack->t - 1;</p>
+                            <p>}</p>
+                        </div>
+                        <div id="topStack">
+                            <h4>/*取栈顶*/</h4>
+                            <comment>/*当栈不为空时，求栈顶元素的值*/</comment>
+                            <p class="start3">DataType top_seq(PSeqStack pastack){</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;if(pastack->t == -1)</p>
+                            <p class="else-top">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf("It is empty!\n");</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;else</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return (pastack->s[pastack->t]);</p>
+                            <p>}</p>
+                        </div>
+                    </div>
+                    <div class="tableShow">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>变量名</th>
+                                    <th>变量值</th>
+                                    <th>说明</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var draw = SVG("draw").size(520, 560);
+
+    var autoIn = false, autoOut = false, autoTop = false;
+    var exeIn = false, exeOut = false, exeTop = false;
+
+    function jump(come, type, ob){
+        if(autoIn || autoOut || autoTop || exeIn || exeOut || exeTop){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+
+    //与绘图设置有关的变量
+    var startX = 250;
+    var startY = 490;
+    var rectWidth = 96;
+    var rectHeight = 60;
+    var drawTextArray = new Array();
+    var topArrow;
+    var topText;
+
+    function inStack(){
+        if(autoIn || exeIn){
+            return;
+        }
+        autoIn = true;
+        $("tbody").html("");
+        draw.clear();
+        drawTextArray.length = 0;
+        hasCurHigh();
+
+        var stackData = $("#stackData1").val().split(',');
+        var inData = $("#inData1").val();
+        if(stackData.length <= 0 || $("#stackData1").val() == ""){
+            autoIn = false;
+            alert("请输入栈中元素");
+            return;
+        }
+        if(inData.length <= 0 || inData == ""){
+            autoIn = false;
+            alert("请输入待入栈元素");
+            return;
+        }
+
+        var times= 0;
+        var $paras = $(".currentCode").children("p");
+        var next = $paras.first("p");
+        next.addClass("highlight");
+        setTimeout(function(){
+            $("tbody").html("");
+            displayTable("MAXNUM", 8, "栈最大容量");
+            displayTable("n", stackData.length, "栈容量");
+            displayTable("x", inData, "待入栈元素");
+            displayTable("pastack->s", stackData.join(','), "栈");
+            if(times == 0){
+                for(var i = 0; i < 8; i++){
+                    drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                    if(i < stackData.length) {
+                        drawTextArray[i] = drawText(stackData[i], 24, startX + 0.5 * rectWidth, startY - rectHeight * (i - 0.3));
+                    }
+                }
+                topArrow = draw.polygon("160,530 150,536 150,533 110,533 110,527 150,527 150,524").fill({color: "black"}).stroke({ width: 5 });
+                topText = drawText("pastack->t", 24, 55, 515);
+                topText.animate(500, ">", 500).dy(-(stackData.length - 1) * rectHeight);
+                topArrow.animate(500, ">", 500).dy(-(stackData.length - 1) * rectHeight);
+            }
+            if(times == 1){
+                if(stackData.length > 8){
+                    autoIn = false;
+                    alert("Overflow!\n");
+                    return;
+                }
+                else{
+                    times = 2;
+                    next.removeClass("highlight");
+                    next = $(".else-in");
+                    next.addClass("highlight");
+                }
+            }
+            if(times == 4){
+                topText.animate(500, ">", 500).dy(-rectHeight - 20);
+                topArrow.animate(10, ">", 500).dy(-rectHeight);
+            }
+            if(times == 5){
+                drawTextArray[stackData.length] = drawText(inData, 24, startX + 0.5 * rectWidth, 60)
+                drawTextArray[stackData.length].animate(500, ">", 500).dy((7 - stackData.length) * rectHeight + 20);
+                stackData.push(inData);
+            }
+            if(times < $paras.length){
+                times++;
+                next.removeClass("highlight");
+                next = next.next("p");
+                next.addClass("highlight");
+                setTimeout(arguments.callee, 1000);
+            }else {
+                autoIn = false;
+                alert("元素入栈完成!\n");
+                return;
+            }
+
+        }, 1000);
+    }
+    function outStack(){
+        if(autoOut || exeOut){
+            return;
+        }
+        autoOut = true;
+        $("tbody").html("");
+        draw.clear();
+        drawTextArray.length = 0;
+        hasCurHigh();
+
+        var stackData = $("#stackData2").val().split(',');
+        if(stackData.length <= 0 || $("#stackData2").val() == ""){
+            autoOut = false;
+            alert("请输入栈中元素");
+            return;
+        }
+
+        var times= 0;
+        var $paras = $(".currentCode").children("p");
+        var next = $paras.first("p");
+        next.addClass("highlight");
+        setTimeout(function(){//alert(times);
+            $("tbody").html("");
+            displayTable("MAXNUM", 8, "栈最大容量");
+            displayTable("n", stackData.length, "栈容量");
+            displayTable("pastack->s", stackData.join(','), "栈");
+            if(times == 0){
+                for(var i = 0; i < 8; i++){
+                    drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                    if(i < stackData.length) {
+                        drawTextArray[i] = drawText(stackData[i], 24, startX + 0.5 * rectWidth, startY - rectHeight * (i - 0.3));
+                    }
+                }
+                topArrow = draw.polygon("160,530 150,536 150,533 110,533 110,527 150,527 150,524").fill({color: "black"}).stroke({ width: 5 });
+                topText = drawText("pastack->t", 24, 55, 515);
+                topText.animate(500, ">", 500).dy(-(stackData.length - 1) * rectHeight);
+                topArrow.animate(500, ">", 500).dy(-(stackData.length - 1) * rectHeight);
+            }
+            if(times == 1){
+                if(stackData.length <= 0){
+                    autoOut = false;
+                    alert("Underflow!\n");
+                    return;
+                }
+                else{
+                    times = 2;
+                    next.removeClass("highlight");
+                    next = next.next("p");
+                    //next.addClass("highlight");
+                }
+            }
+            if(times == 4){
+                drawTextArray[stackData.length - 1].text("");
+                stackData.pop();
+                topText.animate(500, ">", 500).dy(rectHeight * 0.8);
+                topArrow.animate(10, ">", 500).dy(rectHeight);
+            }
+            if(times < $paras.length){
+                times++;
+                next.removeClass("highlight");
+                next = next.next("p");
+                next.addClass("highlight");
+                setTimeout(arguments.callee, 1000);
+            }else{
+                autoOut = false;
+                alert("元素出栈完成!\n");
+                return;
+            }
+        }, 1000);
+    }
+    function topStack(){
+        if(autoTop || exeTop){
+            return;
+        }
+        autoTop = true;
+        $("tbody").html("");
+        draw.clear();
+        drawTextArray.length = 0;
+        hasCurHigh();
+        var stackData = $("#stackData3").val().split(',');
+        if(stackData.length <= 0 || $("#stackData3").val() == ""){
+            autoTop = false;
+            alert("请输入栈中元素");
+            return;
+        }
+        var times= 0;
+        var $paras = $(".currentCode").children("p");
+        var next = $paras.first("p");
+        next.addClass("highlight");
+        setTimeout(function(){
+            $("tbody").html("");
+            displayTable("MAXNUM", 8, "栈最大容量");
+            displayTable("n", stackData.length, "栈容量");
+            displayTable("pastack->t", stackData[stackData.length - 1], "栈顶");
+            displayTable("pastack->s", stackData.join(','), "栈");
+            if(times == 0){
+                for(var i = 0; i < 8; i++){
+                    drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                    if(i < stackData.length) {
+                        drawTextArray[i] = drawText(stackData[i], 24, startX + 0.5 * rectWidth, startY - rectHeight * (i - 0.3));
+                    }
+                }
+                topArrow = draw.polygon("160,530 150,536 150,533 110,533 110,527 150,527 150,524").fill({color: "black"}).stroke({ width: 5 });
+                topText = drawText("pastack->t", 24, 55, 515);
+                topText.animate(500, ">", 500).dy(-(stackData.length - 1) * rectHeight);
+                topArrow.animate(500, ">", 500).dy(-(stackData.length - 1) * rectHeight);
+            }
+            if(times == 1){
+                if(stackData.length <= 0){
+                    autoTop = false;
+                    alert("It is empty!\n");
+                    return;
+                }
+                else{
+                    times = 2;
+                    next.removeClass("highlight");
+                    next = next.next("p");
+                    //next.addClass("highlight");
+                }
+            }
+            if(times == 4){
+                alert("栈顶元素为" + stackData[stackData.length - 1]);
+            }
+            if(times < $paras.length){
+                times++;
+                next.removeClass("highlight");
+                next = next.next("p");
+                next.addClass("highlight");
+                setTimeout(arguments.callee, 1000);
+            }else{
+                autoTop = false;
+                alert("求栈顶完成!\n");
+                return;
+            }
+        }, 1000);
+    }
+
+    function ready(){
+        draw.clear();
+        hasCurHigh();
+        drawTextArray.length = 0;
+        $("tbody").html("");
+    }
+    var stackData1 = new Array();
+    var inData1;
+    var time1 = 0;
+    var $paras = $(".currentCode").children("p");
+    var next;
+    function singleIn(){
+        if(autoIn){
+            return;
+        }
+        time1++;
+        if(time1 == 1){
+            ready();
+            exeIn = true;
+            next = $(".start1");
+            next.addClass("highlight");
+            drawTextArray.length = 0;
+            stackData1 = $("#stackData1").val().split(',');
+            inData1 = $("#inData1").val();
+            if(stackData1.length <= 0 || $("#stackData1").val() == ""){
+                exeIn = false;
+                time1 = 0;
+                alert("请输入栈中元素");
+                return;
+            }
+            if(inData1.length <= 0 || inData1 == ""){
+                time1 = 0
+                exeIn = false;
+                alert("请输入待入栈元素");
+                return;
+            }
+            for(var i = 0; i < 8; i++){
+                drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                if(i < stackData1.length) {
+                    drawTextArray[i] = drawText(stackData1[i], 24, startX + 0.5 * rectWidth, startY - rectHeight * (i - 0.3));
+                }
+            }
+            topArrow = draw.polygon("160,530 150,536 150,533 110,533 110,527 150,527 150,524").fill({color: "black"}).stroke({ width: 5 });
+            topText = drawText("pastack->t", 24, 55, 515);
+            topText.animate(500, ">", 500).dy(-(stackData1.length - 1) * rectHeight);
+            topArrow.animate(500, ">", 500).dy(-(stackData1.length - 1) * rectHeight);
+        }else if(time1 == 3){
+            if(stackData1.length + 1 > 8){
+                exeIn = false;
+                time1 = 0;
+                alert("Overflow!\n");
+                return;
+            }
+            next.removeClass("highlight");
+            next = $(".else-in").next("p");
+            next.addClass("highlight");
+        }else if(time1 == 4){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            topText.animate(500, ">", 500).dy(-rectHeight - 20);
+            topArrow.animate(10, ">", 500).dy(-rectHeight);
+        }else if(time1 == 5){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            drawTextArray[stackData1.length] = drawText(inData1, 24, startX + 0.5 * rectWidth, 60)
+            drawTextArray[stackData1.length].animate(500, ">", 500).dy((7 - stackData1.length) * rectHeight + 20);
+            stackData1.push(inData1);
+        }else if(time1 == 7){
+            exeIn = false;
+            time1 = 0;
+            alert("元素入栈完成!\n");
+            return;
+        }
+        else if(time1 < 7){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+        }
+        $("tbody").html("");
+        displayTable("MAXNUM", 8, "栈最大容量");
+        displayTable("n", stackData1.length, "栈容量");
+        displayTable("x", inData1, "待入栈元素");
+        displayTable("pastack->s", stackData1.join(','), "栈");
+    }
+
+    var stackData2 = new Array();
+    var time2 = 0;
+    var $paras = $(".currentCode").children("p");
+    var next;
+    function singleOut(){
+        if(autoOut){
+            return;
+        }
+        time2++;
+        if(time2 == 1){
+            ready();
+            exeOut = true;
+            next = $(".start2");
+            next.addClass("highlight");
+            drawTextArray.length = 0;
+            stackData2 = $("#stackData2").val().split(',');
+
+            if(stackData2.length <= 0 || $("#stackData2").val() == ""){
+                time2 = 0
+                exeOut = false;
+                alert("请输入栈中元素!\n");
+                return;
+            }
+            for(var i = 0; i < 8; i++){
+                drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                if(i < stackData2.length) {
+                    drawTextArray[i] = drawText(stackData2[i], 24, startX + 0.5 * rectWidth, startY - rectHeight * (i - 0.3));
+                }
+            }
+            topArrow = draw.polygon("160,530 150,536 150,533 110,533 110,527 150,527 150,524").fill({color: "black"}).stroke({ width: 5 });
+            topText = drawText("pastack->t", 24, 55, 515);
+            topText.animate(500, ">", 500).dy(-(stackData2.length - 1) * rectHeight);
+            topArrow.animate(500, ">", 500).dy(-(stackData2.length - 1) * rectHeight);
+        }else if(time2 == 3){
+            next.removeClass("highlight");
+            next = $(".else-out").next("p");
+            next.addClass("highlight");
+        }else if(time2 == 4){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            drawTextArray[stackData2.length - 1].text("");
+            stackData2.pop();
+            topText.animate(500, ">", 500).dy(rectHeight * 0.8);
+            topArrow.animate(10, ">", 500).dy(rectHeight);
+        }
+        else if(time2 == 6){
+            exeOut = false;
+            time2 = 0;
+            alert("元素出栈完成!\n");
+            return;
+        }
+        else if(time2 < 6){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+        }
+        $("tbody").html("");
+        displayTable("MAXNUM", 8, "栈最大容量");
+        displayTable("n", stackData2.length, "栈容量");
+        displayTable("pastack->s", stackData2.join(','), "栈");
+    }
+
+    var stackData3 = new Array();
+    var time3 = 0;
+    var $paras = $(".currentCode").children("p");
+    var next;
+    function singleTop(){
+        if(autoTop){
+            return;
+        }
+        time3++;
+        if(time3 == 1){
+            ready();
+            exeTop = true;
+            next = $(".start3");
+            next.addClass("highlight");
+            drawTextArray.length = 0;
+            stackData3 = $("#stackData3").val().split(',');
+
+            if(stackData3.length <= 0 || $("#stackData3").val() == ""){
+                time3 = 0
+                exeTop = false;
+                alert("请输入栈中元素!\n");
+                return;
+            }
+            for(var i = 0; i < 8; i++){
+                drawRect(rectWidth, rectHeight, startX, startY - i * rectHeight);
+                if(i < stackData3.length) {
+                    drawTextArray[i] = drawText(stackData3[i], 24, startX + 0.5 * rectWidth, startY - rectHeight * (i - 0.3));
+                }
+            }
+            topArrow = draw.polygon("160,530 150,536 150,533 110,533 110,527 150,527 150,524").fill({color: "black"}).stroke({ width: 5 });
+            topText = drawText("pastack->t", 24, 55, 515);
+            topText.animate(500, ">", 500).dy(-(stackData3.length - 1) * rectHeight);
+            topArrow.animate(500, ">", 500).dy(-(stackData3.length - 1) * rectHeight);
+        }else if(time3 == 3){
+            next.removeClass("highlight");
+            next = $(".else-top").next("p");
+            next.addClass("highlight");
+        }else if(time3 == 4){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+            alert("栈顶元素是" + stackData3[stackData3.length - 1]);
+        }else if(time3 == 6){
+            exeTop = false;
+            time3 = 0;
+            alert("元素出栈完成!\n");
+            return;
+        }else if(time3 < 6){
+            next.removeClass("highlight");
+            next = next.next("p");
+            next.addClass("highlight");
+        }
+        $("tbody").html("");
+        displayTable("MAXNUM", 8, "栈最大容量");
+        displayTable("n", stackData3.length, "栈容量");
+        displayTable("pastack->t", stackData3[stackData3.length - 1], "栈顶");
+        displayTable("pastack->s", stackData3.join(','), "栈");
+    }
+
+</script>
+</body>
+</html>

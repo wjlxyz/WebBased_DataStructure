@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="../js/common.js"></script>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <style type="text/css">
+        #depthG, #broadG{
+            display: none;
+        }
+        .nav2{
+            margin-top: -194px;
+            display: none;
+        }
+        .codeShow{
+            line-height: 120%;
+            height: 400px;
+        }
+        .tableShow{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 myNav">
+            <div class="nav1">
+                <button class="btn btn-nav" onclick="navButton(this)">图</button>
+                <button type="button" class="btn btn-nav" onclick="window.location.href='../index.html'">返<br>回<br>主<br>页</button>
+            </div>
+            <div class="nav2">
+                <button class="btn btn-nav" onclick="jump('depth', 'G', this)">深<br>度<br>优<br>先<br>周<br>游</button>
+                <button class="btn btn-nav" onclick="jump('broad', 'G', this)">广<br>度<br>优<br>先<br>周<br>游</button>
+            </div>
+        </div>
+        <div class="col-md-10 content">
+            <div class="row">
+                <span class="col-md-12 actionBar">
+                    <span class="tab-pane" id="depth">
+                        <button class="btn btn-primary btn-act" onclick="dfs()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleDfs()">单步执行</button>
+                    </span>
+                    <span class="tab-pane" id="broad">
+                        <button class="btn btn-primary btn-act" onclick="bfs()">自动执行</button>
+                        <button class="btn btn-act btn-primary" onclick="singleBfs()">单步执行</button>
+                    </span>
+                </span>
+
+            </div>
+            <div class="row">
+                <div class="col-md-5 drawing">
+                    <div id="draw"></div>
+                </div>
+                <div class="col-md-7 showing">
+                    <div class="codeShow">
+                        <div id="depthG">
+                            <h4>/*深度优先周游*/</h4>
+                            <p class="p1">void dfs(Graph g,Vertex v){</p>
+                            <p class="p2">&nbsp;&nbsp;&nbsp;&nbsp;Vertex v1;</p>
+                            <p class="p3">&nbsp;&nbsp;&nbsp;&nbsp;v.mark=TRUE;</p>
+                            <p class="p4">&nbsp;&nbsp;&nbsp;&nbsp;for(v1=firstAdjacent(g,v);v1!=NULL;v1=nextAdjacent(g,v,v1))</p>
+                            <p class="p5">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(v1.mark==false)</p>
+                            <p class="p6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dfs(g,v1);</p>
+                            <p class="p7">}</p>
+                        </div>
+                        <div id="broadG">
+                            <h4>/*广度优先周游*/</h4>
+                            <p class="q1">void bfs(Graph g,Vertex v){</p>
+                            <p class="q2">&nbsp;&nbsp;&nbsp;&nbsp;Vertex v1,v2;</p>
+                            <p class="q3">&nbsp;&nbsp;&nbsp;&nbsp;Queue q=createEmptyQueue();<comment>/*队列元素的类型为Vertex*/</comment></p>
+                            <p class="q4">&nbsp;&nbsp;&nbsp;&nbsp;enQueue(q,v);</p>
+                            <p class="q5">&nbsp;&nbsp;&nbsp;&nbsp;while(!isEmptyQueue(q)){</p>
+                            <p class="q6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1=frontQueue(q);</p>
+                            <p class="q7">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deQueue(q);</p>
+                            <p class="q8">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(v1.mark==TRUE)</p>
+                            <p class="q9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</p>
+                            <p class="q10">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v1.mark=TRUE;</p>
+                            <p class="q11">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v2=firstAdjacent(g,v1);</p>
+                            <p class="q12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while(v2!=NULL){</p>
+                            <p class="q13">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if(v2.mark==FALSE)</p>
+                            <p class="q14">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enQueue(q,v2);</p>
+                            <p class="q15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v2=nextAdjacent(g,v1,v2);</p>
+                            <p class="q16">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="q17">&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+                            <p class="q18">}</p>
+                        </div>
+                    </div>
+                    <div class="tableShow">
+                        <table>
+                            <thead>
+                            <tr>
+                                <td>变量名</td>
+                                <td>变量值</td>
+                                <td>说明</td>
+                            </tr>
+                            </thead>
+                            <tbody id="tbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/svg.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var autoD = false, autoB = false;
+    var exeD = false, exeB = false;
+
+    var draw = SVG("draw").size(520, 500);
+    var startX = 40, startY = 40;
+    var lineLength = 160;
+    var diameter = 50;
+    var nodeNum = 1;
+    var visitNum = new Array(9);
+
+    function jump(come, type, ob){
+        if(autoD || autoB || exeB || exeD){
+            return;
+        }
+        draw.clear();
+        panelJump(come, type, ob);
+    }
+    function getLine(fromX, fromY, toX, toY){
+        draw.line(fromX, fromY, toX, toY).stroke({width: 2});
+    }
+    function getCircle(moveX, moveY){
+        draw.circle(diameter).move(moveX, moveY)
+                .attr({
+                    fill: "lightblue",
+                    "fill-opacity": 0.5,
+                    stroke: "black",
+                    "stroke-width": 3
+                 }).attr('class', 'v' + (nodeNum++));
+    }
+    function visit(preNodeClass, curNodeClass, visitNum){
+        var $preNodeClass = $("." + preNodeClass);
+        var $curNodeClass = $("." + curNodeClass);
+        if($preNodeClass.length > 0){
+            $preNodeClass.css("stroke", "black");
+        }
+        if($curNodeClass.length > 0){
+            if(visitNum == 0)
+                $curNodeClass.css("fill", "yellow").css("stroke", "red");
+            else
+                $curNodeClass.css("stroke", "red");
+        }
+    }
+    function paintGraph(){
+        var node = 1;
+        for(var j = 0; j < 3; j++){
+            for(var i = 0; i < 2; i++){
+                if(i == 1 && j == 0){
+                    break;
+                }
+                getCircle(startX + i * lineLength, startY + j * lineLength);
+                draw.text("v" + node).font({
+                    family:"KaiTi",
+                    size:28,
+                    anchor:"middle",
+                    leading:"1.5em"
+                }).move(startX + i * lineLength + 0.5 * diameter, startY + j * lineLength + 0.2 * diameter).fill({color: "blue"});
+                node++;
+            }
+        }
+        nodeNum = 1;
+        for(var i = 1; i < 3; i++){
+            getLine(startX + diameter * 0.5, startY + diameter + (i - 1) * lineLength, startX + diameter * 0.5, startY + i * lineLength);
+        }
+        getLine(startX + diameter, startY + diameter * 0.5 + lineLength, startX + lineLength, startY + diameter * 0.5 + lineLength);
+        getLine(startX + diameter, startY + diameter * 0.5 + 2 * lineLength, startX + lineLength, startY + diameter * 0.5 + 2 * lineLength);
+        getLine(startX + lineLength + 0.5 * diameter, startY + diameter + lineLength, startX + lineLength + 0.5 * diameter, startY + 2 * lineLength);
+    }
+    function paintGraph2(){
+        var node = 1;
+        for(var j = 0; j < 3; j++){
+            for(var i = 0; i < 3; i++){
+                if(i == 2 && j == 2){
+                    i = 3; j = 3;
+                    break;
+                }
+                else{
+                    getCircle(startX + i * lineLength, startY + j * lineLength);
+                    draw.text("v" + node).font({
+                        family:"KaiTi",
+                        size:28,
+                        anchor:"middle",
+                        leading:"1.5em"
+                    }).move(startX + i * lineLength + 0.5 * diameter, startY + j * lineLength + 0.2 * diameter).fill({color: "blue"});
+                    node++;
+                }
+
+            }
+        }
+        for(var i = 1; i < 3; i++){
+            getLine(startX + diameter * 0.5, startY + diameter + (i - 1) * lineLength, startX + diameter * 0.5, startY + i * lineLength);
+        }
+        for(var i = 1; i < 3; i++){
+            getLine(startX + diameter + (i - 1) * lineLength, startY + 0.5 * diameter, startX + i * lineLength, startY + 0.5 * diameter);
+        }
+        getLine(startX + diameter, startY + diameter * 0.5 + lineLength, startX + lineLength, startY + diameter * 0.5 + lineLength);
+        getLine(startX + diameter, startY + diameter * 0.5 + 2 * lineLength, startX + lineLength, startY + diameter * 0.5 + 2 * lineLength);
+        getLine(startX + lineLength + 0.5 * diameter, startY + diameter + lineLength, startX + lineLength + 0.5 * diameter, startY + 2 * lineLength);
+        getLine(startX + 2 * lineLength + 0.5 * diameter, startY + diameter, startX + 2 * lineLength + 0.5 * diameter, startY + lineLength)
+        getLine(startX + diameter + lineLength, startY + 0.5 * diameter, startX + 2 * lineLength + 0.5 * diameter, startY + lineLength);
+    }
+
+    var timeDPara = 1;
+    var timeDNode = 1;
+    var time = new Array(0, 0, 0, 0, 0, 0);
+    var hasGraph = false;
+    var visitDSep = new Array();
+    var curDNode;
+    function singleDfs(){
+        if(autoD){
+            return;
+        }
+        exeD = true;
+        if(timeDNode == 1){
+            if(time[1] == 0){
+                high("p" + timeDPara);
+                if(!hasGraph){
+                    draw.clear();
+                    paintGraph();
+                    hasGraph = true;
+                }
+                curDNode = 2
+                visit("v1", "v1", 0);
+                timeDPara++;
+                if(timeDPara == 7) {
+                    visitDSep.push(1);
+                    timeDNode++;
+                    timeDPara = 1;
+                    time[1] = 1;
+                }
+            }else {
+                curDNode = -1;
+                visit("v2", "v1", 0);
+                timeDPara = 1;
+                timeDNode = 1;
+                hasGraph = false;
+                exeD = false;
+                time = [0,0,0,0,0,0];
+                visitDSep.length = 0;
+                nodeNum = 1;
+                alert("深度优先遍历完成!\n");
+                return;
+            }
+        }else if(timeDNode == 2){
+            if(time[2] == 0){
+                high("p" + timeDPara);
+                curDNode = 3
+                visit("v1", "v2", 0);
+                timeDPara++;
+                if(timeDPara == 7){
+                    visitDSep.push(2);
+                    timeDNode++;
+                    timeDPara = 1;
+                    time[2] = 1;
+                }
+            }else if(time[2] == 1){
+                visit("v3", "v2", 1);
+                curDNode = 3;
+                high("p" + timeDPara);
+                timeDPara++;
+                time[2] = 2;
+            }else if(time[2] == 2){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[2] = 3;
+            }else if(time[2] == 3){
+                high("p" + timeDPara);
+                curDNode = 4;
+                timeDPara++;
+                time[2] = 4;
+            }else if(time[2] == 4){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[2] = 5;
+            }else if(time[2] == 5){
+                high("p" + timeDPara);
+                curDNode = 1;
+                timeDPara++;
+                time[2] = 6;
+            }else if(time[2] == 6){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[2] = 7;
+            }else if(time[2] == 7){
+                high("p" + timeDPara);
+                timeDPara = 7;
+                time[2] = 8;
+            }else if(time[2] == 8){
+                high("p" + timeDPara);
+                timeDPara = 4;
+                timeDNode--;
+            }
+        }else if(timeDNode == 3){
+            if(time[3] == 0){
+                high("p" + timeDPara);
+                curDNode = 5;
+                visit("v2", "v3", 0);
+                timeDPara++;
+                if(timeDPara == 7){
+                    visitDSep.push(3);
+                    timeDNode++;
+                    timeDPara = 1;
+                    time[3] = 1;
+                }
+            }else if(time[3] == 1){
+                visit("v5", "v3", 1);
+                high("p" + timeDPara);
+                curDNode = 5;
+                timeDPara++;
+                time[3] = 2;
+            }else if(time[3] == 2){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[3] = 3;
+            }else if(time[3] == 3){
+                high("p" + timeDPara);
+                timeDPara++;
+                curDNode = 2
+                time[3] = 4;
+            }else if(time[3] == 4){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[3] = 5;
+            }else if(time[3] == 5){
+                high("p" + timeDPara);
+                timeDPara = 7;
+                time[3] = 6;
+            }else if(time[3] == 6){
+                high("p" + timeDPara);
+                timeDPara = 4;
+                timeDNode--;
+            }
+        }else if(timeDNode == 4){//第四个节点，实际上是v5
+            if(time[4] == 0){
+                high("p" + timeDPara);
+                curDNode = 4;
+                visit("v3", "v5", 0);
+                timeDPara++;
+                if(timeDPara == 7){
+                    visitDSep.push(5);
+                    timeDNode++;
+                    timeDPara = 1;
+                    time[4] = 1;
+                }
+            }else if(time[4] == 1){
+                visit("v4", "v5", 1);
+                curDNode = 4;
+                high("p" + timeDPara);
+                timeDPara++;
+                time[4] = 2;
+            }else if(time[4] == 2){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[4] = 3;
+            }else if(time[4] == 3){
+                high("p" + timeDPara);
+                curDNode = 3;
+                timeDPara++;
+                time[4] = 4;
+            }else if(time[4] == 4){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[4] = 5;
+            }else if(time[4] == 5){
+                high("p" + timeDPara);
+                timeDPara = 7;
+                time[4] = 6;
+            }else if(time[4] == 6){
+                high("p" + timeDPara);
+                timeDPara = 4;
+                timeDNode--;
+            }
+
+        }else if(timeDNode == 5){//第五个节点，实际上是v4
+            if(time[5] == 0){
+                high("p" + timeDPara);
+                visit("v5", "v4", 0);
+                curDNode = 2;
+                if(timeDPara == 4){
+                    time[5] = 1;
+                }
+                timeDPara++;
+            }else if(time[5] == 1){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[5] = 2;
+            }else if(time[5] == 2){
+                curDNode = 5;
+                high("p" + timeDPara);
+                timeDPara++;
+                time[5] = 3;
+            }else if(time[5] == 3){
+                high("p" + timeDPara);
+                timeDPara--;
+                time[5] = 4;
+            }else if(time[5] == 4){
+                high("p" + timeDPara);
+                time[5] = 5;
+                timeDPara = 7;
+            }else if(time[5] == 5){
+                high("p" + timeDPara);
+                timeDPara = 4;
+                visitDSep.push(4);
+                timeDNode--;
+            }
+        }
+        $("#tbody").html("");
+        displayTable("v", timeDNode, "当前访问节点");
+        displayTable("v1", curDNode, "临时节点");
+        displayTable("周游序列", visitDSep.join(','), "");
+    }
+    function dfs(){
+        if(autoD || exeD){
+            return;
+        }
+        autoD = true;
+        draw.clear();
+        paintGraph();
+
+        var timeDPara = 1;
+        var timeDNode = 1;
+        var time = new Array(0,0,0,0,0,0);
+        var visitDSeq = new Array();
+        var curNode;
+        var over = false;
+        setTimeout(function(){
+            if(timeDNode == 1){
+                if(time[1] == 0){
+                    high("p" + timeDPara);
+                    if(!hasGraph){
+                        draw.clear();
+                        paintGraph();
+                        hasGraph = true;
+                    }
+                    curDNode = 2
+                    visit("v1", "v1", 0);
+                    timeDPara++;
+                    if(timeDPara == 7) {
+                        visitDSep.push(1);
+                        timeDNode++;
+                        timeDPara = 1;
+                        time[1] = 1;
+                    }
+                }else {
+                    over = true;
+                    curDNode = -1;
+                    visit("v2", "v1", 0);
+                    timeDPara = 1;
+                    timeDNode = 1;
+                    hasGraph = false;
+                    autoD = false;
+                    time = [0,0,0,0,0,0];
+                    visitDSep.length = 0;
+                    nodeNum = 1;
+                    alert("深度优先遍历完成!\n");
+                    return;
+                }
+            }else if(timeDNode == 2){
+                if(time[2] == 0){
+                    high("p" + timeDPara);
+                    curDNode = 3
+                    visit("v1", "v2", 0);
+                    timeDPara++;
+                    if(timeDPara == 7){
+                        visitDSep.push(2);
+                        timeDNode++;
+                        timeDPara = 1;
+                        time[2] = 1;
+                    }
+                }else if(time[2] == 1){
+                    visit("v3", "v2", 1);
+                    curDNode = 3;
+                    high("p" + timeDPara);
+                    timeDPara++;
+                    time[2] = 2;
+                }else if(time[2] == 2){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[2] = 3;
+                }else if(time[2] == 3){
+                    high("p" + timeDPara);
+                    curDNode = 4;
+                    timeDPara++;
+                    time[2] = 4;
+                }else if(time[2] == 4){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[2] = 5;
+                }else if(time[2] == 5){
+                    high("p" + timeDPara);
+                    curDNode = 1;
+                    timeDPara++;
+                    time[2] = 6;
+                }else if(time[2] == 6){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[2] = 7;
+                }else if(time[2] == 7){
+                    high("p" + timeDPara);
+                    timeDPara = 7;
+                    time[2] = 8;
+                }else if(time[2] == 8){
+                    high("p" + timeDPara);
+                    timeDPara = 4;
+                    timeDNode--;
+                }
+            }else if(timeDNode == 3){
+                if(time[3] == 0){
+                    high("p" + timeDPara);
+                    curDNode = 5;
+                    visit("v2", "v3", 0);
+                    timeDPara++;
+                    if(timeDPara == 7){
+                        visitDSep.push(3);
+                        timeDNode++;
+                        timeDPara = 1;
+                        time[3] = 1;
+                    }
+                }else if(time[3] == 1){
+                    visit("v5", "v3", 1);
+                    high("p" + timeDPara);
+                    curDNode = 5;
+                    timeDPara++;
+                    time[3] = 2;
+                }else if(time[3] == 2){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[3] = 3;
+                }else if(time[3] == 3){
+                    high("p" + timeDPara);
+                    timeDPara++;
+                    curDNode = 2
+                    time[3] = 4;
+                }else if(time[3] == 4){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[3] = 5;
+                }else if(time[3] == 5){
+                    high("p" + timeDPara);
+                    timeDPara = 7;
+                    time[3] = 6;
+                }else if(time[3] == 6){
+                    high("p" + timeDPara);
+                    timeDPara = 4;
+                    timeDNode--;
+                }
+            }else if(timeDNode == 4){//第四个节点，实际上是v5
+                if(time[4] == 0){
+                    high("p" + timeDPara);
+                    curDNode = 4;
+                    visit("v3", "v5", 0);
+                    timeDPara++;
+                    if(timeDPara == 7){
+                        visitDSep.push(5);
+                        timeDNode++;
+                        timeDPara = 1;
+                        time[4] = 1;
+                    }
+                }else if(time[4] == 1){
+                    visit("v4", "v5", 1);
+                    curDNode = 4;
+                    high("p" + timeDPara);
+                    timeDPara++;
+                    time[4] = 2;
+                }else if(time[4] == 2){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[4] = 3;
+                }else if(time[4] == 3){
+                    high("p" + timeDPara);
+                    curDNode = 3;
+                    timeDPara++;
+                    time[4] = 4;
+                }else if(time[4] == 4){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[4] = 5;
+                }else if(time[4] == 5){
+                    high("p" + timeDPara);
+                    timeDPara = 7;
+                    time[4] = 6;
+                }else if(time[4] == 6){
+                    high("p" + timeDPara);
+                    timeDPara = 4;
+                    timeDNode--;
+                }
+
+            }else if(timeDNode == 5){//第五个节点，实际上是v4
+                if(time[5] == 0){
+                    high("p" + timeDPara);
+                    visit("v5", "v4", 0);
+                    curDNode = 2;
+                    if(timeDPara == 4){
+                        time[5] = 1;
+                    }
+                    timeDPara++;
+                }else if(time[5] == 1){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[5] = 2;
+                }else if(time[5] == 2){
+                    curDNode = 5;
+                    high("p" + timeDPara);
+                    timeDPara++;
+                    time[5] = 3;
+                }else if(time[5] == 3){
+                    high("p" + timeDPara);
+                    timeDPara--;
+                    time[5] = 4;
+                }else if(time[5] == 4){
+                    high("p" + timeDPara);
+                    time[5] = 5;
+                    timeDPara = 7;
+                }else if(time[5] == 5){
+                    high("p" + timeDPara);
+                    timeDPara = 4;
+                    visitDSep.push(4);
+                    timeDNode--;
+                }
+            }
+            $("#tbody").html("");
+            displayTable("v", timeDNode, "当前访问节点");
+            displayTable("v1", curDNode, "临时节点");
+            displayTable("周游序列", visitDSep.join(','), "");
+            if(!over){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+
+
+    //图的节点的数据结构
+    function Graph(mark, value, next){
+        this.mark = mark;
+        this.value = value;
+        this.next = next;
+        this.firstAdjacent = function(){
+            if(this.next.length > 0){
+                for(var i = 0; i < 8; i++){
+                    if(this.next[0] == graphArray[i].value){
+                        return graphArray[i];
+                    }
+                }
+            }
+            return null;
+        }
+        this.nextAdjacent = function(exceptV){
+            for(var i = 0; i < this.next.length; i++){
+                if(this.next[i] != exceptV.value){
+                    for(var j = 0; j < 8; j++){
+                        if(graphArray[j].value == this.next[i]){
+                            return graphArray[j];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+    }
+    var graphArray= new Array();
+    //构建图
+    function buildGraph(){
+        graphArray[0] = new Graph(false, "v1", ["v2", "v4"]);
+        graphArray[1] = new Graph(false, "v2", ["v1", "v3", "v6"]);
+        graphArray[2] = new Graph(false, "v3", ["v2", "v6"]);
+        graphArray[3] = new Graph(false, "v4", ["v1", "v5", "v7"]);
+        graphArray[4] = new Graph(false, "v5", ["v4", "v8"]);
+        graphArray[5] = new Graph(false, "v6", ["v2", "v3"]);
+        graphArray[6] = new Graph(false, "v7", ["v4", "v8"]);
+        graphArray[7] = new Graph(false, "v8", ["v5", "v7"]);
+    }
+
+    var times = 0;
+    var timeBPara = 1;
+    var queue = new Array();
+    var v1 = new Graph(), v2 = new Graph();
+    var visitBSeq = new Array();
+    var storeQueue = new Array();
+    function singleBfs(){
+        if(autoB){
+            return;
+        }
+        times++;
+        if(times == 1){//画图、起始节点
+            high("q" + timeBPara);
+            draw.clear();
+            nodeNum = 1;
+            paintGraph2();
+            buildGraph();
+            v1 = graphArray[0];
+            visit(v1.value, v1.value, 0);
+            exeB = true;
+            timeBPara++;
+        }else if(times == 2){//v1, v2
+            high("q" + timeBPara);
+            timeBPara++;
+        }else if(times == 3){//Queue q
+            high("q" + timeBPara);
+            timeBPara++;
+        }else if(times == 4){//enQueue(q, v)
+            high("q" + timeBPara);
+            queue.push(graphArray[0]);
+            storeQueue.push(graphArray[0].value)
+            timeBPara++;
+        }else if(times == 5) {//while(! isEmptyQueue(q))
+            high("q" + timeBPara);
+            if(queue.length == 0){
+                times = 17;
+                timeBPara = 18;
+            }else{
+                timeBPara++;
+            }
+        }else if(times == 6){
+            high("q" + timeBPara);
+            var tmpNode = v1;
+            v1 = queue.shift();
+            storeQueue.shift();
+            visit(tmpNode.value, v1.value, 0);
+            visitBSeq.push(v1.value);
+            timeBPara++;
+        }else if(times == 7){
+            high("q" + timeBPara);
+            timeBPara++;
+        }else if(times == 8){
+            high("q" + timeBPara);
+            if(v1.mark){
+                timeBPara++;
+            }else{
+                times++;
+                timeBPara = 10;
+            }
+        }else if(times == 9){
+            high("q" + timeBPara);
+            times = 4;
+            timeBPara = 5;
+        }else if(times == 10){
+            high("q" + timeBPara);
+            v1.mark = true;
+            timeBPara++;
+        }else if(times == 11){
+            high("q" + timeBPara);
+            v2 = v1.firstAdjacent();
+            timeBPara++;
+        }else if(times == 12){//while(v2 != NULL)
+            high("q" + timeBPara);
+            if(v2 == null){
+                times = 15;
+                timeBPara = 16
+            }else{
+                timeBPara++;
+            }
+        }else if(times == 13){
+            high("q" + timeBPara);
+            if(v2.mark == false){
+                timeBPara++;
+            }else {
+                times = 14;
+                timeBPara = 15;
+            }
+        }else if(times == 14){
+            high("q" + timeBPara);
+            queue.push(v2);
+            storeQueue.push(v2.value);
+            timeBPara++;
+        }else if(times == 15){
+            high("q" + timeBPara);
+            v2 = v1.nextAdjacent(v2);//取得图中v1的除了v2的邻节点
+            if(($.inArray(v2, queue) >= 0) || v2.mark == true){
+                v2 = null;
+            }
+            timeBPara++;
+        }else if(times == 16){
+            high("q" + timeBPara);
+            if(v2 == null){
+                timeBPara++;
+            }else{
+                times = 11;
+                timeBPara = 12;
+            }
+        }else if(times == 17){
+            high("q" + timeBPara);
+            if(queue.length == 0){
+                timeBPara++;
+            }else {
+                times = 4;
+                timeBPara = 5;
+            }
+        }else if(times == 18){
+            high("q" + timeBPara);
+            exeB = false;
+            times = 0;
+            timeBPara = 1;
+            v1 = new Graph();
+            v2 = new Graph();
+            queue.length = 0;
+            visitBSeq.length = 0;
+            storeQueue.length = 0;
+            alert("广度优先遍历完成!\n");//程序出口
+            return;
+        }
+        $("#tbody").html("");
+        displayTable("v1", v1 != null ? v1.value : "", "当前访问节点");
+        displayTable("v2", v2 != null ? v2.value : "", "临时节点");
+        displayTable("q", storeQueue.join(',') ,"存储队列")
+        displayTable("周游序列", visitBSeq.join(','), "周游序列");
+    }
+
+    function bfs(){
+        if(autoB || exeB){
+            return;
+        }
+        autoB = true;
+        setTimeout(function(){
+            times++;
+            if(times == 1){//画图、起始节点
+                high("q" + timeBPara);
+                draw.clear();
+                nodeNum = 1;
+                paintGraph2();
+                buildGraph();
+                v1 = graphArray[0];
+                visit(v1.value, v1.value, 0);
+                exeB = true;
+                timeBPara++;
+            }else if(times == 2){//v1, v2
+                high("q" + timeBPara);
+                timeBPara++;
+            }else if(times == 3){//Queue q
+                high("q" + timeBPara);
+                timeBPara++;
+            }else if(times == 4){//enQueue(q, v)
+                high("q" + timeBPara);
+                queue.push(graphArray[0]);
+                storeQueue.push(graphArray[0].value)
+                timeBPara++;
+            }else if(times == 5) {//while(! isEmptyQueue(q))
+                high("q" + timeBPara);
+                if(queue.length == 0){
+                    times = 17;
+                    timeBPara = 18;
+                }else{
+                    timeBPara++;
+                }
+            }else if(times == 6){
+                high("q" + timeBPara);
+                var tmpNode = v1;
+                v1 = queue.shift();
+                storeQueue.shift();
+                visit(tmpNode.value, v1.value, 0);
+                visitBSeq.push(v1.value);
+                timeBPara++;
+            }else if(times == 7){
+                high("q" + timeBPara);
+                timeBPara++;
+            }else if(times == 8){
+                high("q" + timeBPara);
+                if(v1.mark){
+                    timeBPara++;
+                }else{
+                    times++;
+                    timeBPara = 10;
+                }
+            }else if(times == 9){
+                high("q" + timeBPara);
+                times = 4;
+                timeBPara = 5;
+            }else if(times == 10){
+                high("q" + timeBPara);
+                v1.mark = true;
+                timeBPara++;
+            }else if(times == 11){
+                high("q" + timeBPara);
+                v2 = v1.firstAdjacent();
+                timeBPara++;
+            }else if(times == 12){//while(v2 != NULL)
+                high("q" + timeBPara);
+                if(v2 == null){
+                    times = 15;
+                    timeBPara = 16
+                }else{
+                    timeBPara++;
+                }
+            }else if(times == 13){
+                high("q" + timeBPara);
+                if(v2.mark == false){
+                    timeBPara++;
+                }else {
+                    times = 14;
+                    timeBPara = 15;
+                }
+            }else if(times == 14){
+                high("q" + timeBPara);
+                queue.push(v2);
+                storeQueue.push(v2.value);
+                timeBPara++;
+            }else if(times == 15){
+                high("q" + timeBPara);
+                v2 = v1.nextAdjacent(v2);//取得图中v1的除了v2的邻节点
+                if(($.inArray(v2, queue) >= 0) || v2.mark == true){
+                    v2 = null;
+                }
+                timeBPara++;
+            }else if(times == 16){
+                high("q" + timeBPara);
+                if(v2 == null){
+                    timeBPara++;
+                }else{
+                    times = 11;
+                    timeBPara = 12;
+                }
+            }else if(times == 17){
+                high("q" + timeBPara);
+                if(queue.length == 0){
+                    timeBPara++;
+                }else {
+                    times = 4;
+                    timeBPara = 5;
+                }
+            }else if(times == 18){
+                high("q" + timeBPara);
+                autoB = false;
+                times = 0;
+                timeBPara = 1;
+                v1 = new Graph();
+                v2 = new Graph();
+                queue.length = 0;
+                visitBSeq.length = 0;
+                storeQueue.length = 0;
+                alert("广度优先遍历完成!\n");//程序出口
+                return;
+            }
+            $("#tbody").html("");
+            displayTable("v1", v1 != null ? v1.value : "", "当前访问节点");
+            displayTable("v2", v2 != null ? v2.value : "", "临时节点");
+            displayTable("q", storeQueue.join(',') ,"存储队列")
+            displayTable("周游序列", visitBSeq.join(','), "周游序列");
+            if(times < 18){
+                setTimeout(arguments.callee, 1000);
+            }
+        }, 1000);
+    }
+</script>
+</body>
+</html>
